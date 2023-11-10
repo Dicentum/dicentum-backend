@@ -1,0 +1,31 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  p Runing on <strong>#{ip}</strong> on port <strong>#{port}</strong> in <strong>#{mode}</strong> mode
+  p Find here the different commands available:
+
+  div.commands
+    div.auth
+      a(href='/auth') /auth
+      ul
+        li GET (Requires a token)
+
+    div.authregister
+      a(href='/auth/register') /auth/register
+      ul
+        li POST
+
+    div.authlogin
+      a(href='/auth/login') /auth/login
+      ul
+        li POST (Requires a username and password)
+
+    div.users
+      a(href='/users') /users
+      ul
+        li GET
+      a(href='/users/:id') /users/:id
+      ul
+        li GET (Requires a token)
