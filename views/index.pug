@@ -2,8 +2,8 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
-  p Runing on <strong>#{ip}</strong> on port <strong>#{port}</strong> in <strong>#{mode}</strong> mode
+  p Welcome to #{title} interface
+  p Runing on port <strong>#{port}</strong> in <strong>#{mode}</strong> mode
   p Find here the different commands available:
 
   div.commands
@@ -29,3 +29,7 @@ block content
       a(href='/users/:id') /users/:id
       ul
         li GET (Requires a token)
+    div.end
+      h3= 'Client IP'
+      div.end
+        p The IP of the client is <strong>#{ip}</strong>
