@@ -50,6 +50,13 @@ const userSchema = new mongoose.Schema({
     },
     country: {
         type: String
+    },
+    photo: {
+        type: String
+    },
+    parliamentaryGroup: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ParliamentaryGroup'
     }
 
 }, { timestamps: true });
