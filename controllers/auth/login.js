@@ -14,13 +14,17 @@ const login = async (req, res, next) => {
         if (!passwordMatch) {
             return res.status(401).json({ message: 'Incorrect password' });
         }
+        const expiresIn = '1 hour';
+        const expiration = Math.floor(Date.now() / 1000) + (60 * 60); // 1 hour from now
         const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
-            expiresIn: '1 hour'
+            expiresIn: expiresIn
         });
+
         res.json({
             message: 'Authentication successful',
+            username: username,
             token: token,
-            expiration: token.expiresIn
+            expiration: expiration
         });
     } catch (error) {
         next(error);

@@ -1,19 +1,20 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var mongoose = require('mongoose');
-var bodyParser = require("body-parser");
+const createError = require('http-errors');
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const mongoose = require('mongoose');
+const bodyParser = require("body-parser");
 const config = require('./utils/config');
 const printer = require('./utils/printer');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var authRouter = require('./routes/auth')
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+const authRouter = require('./routes/auth');
 const {MODE} = require("./utils/config");
 
-var app = express();
+const app = express();
 
 //Mongoose connection
 mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -35,6 +36,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}))
+app.use(cors());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
