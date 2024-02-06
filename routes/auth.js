@@ -9,7 +9,11 @@ router.post('/login', login);
 
 router.get('/', authenticate, (req, res) => {
     try {
-        res.json({message: `Welcome ${req.user.username}`});
+        res.json({
+            user: `${req.user.username}`,
+            email: `${req.user.email}`,
+            id: `${req.user._id}`
+        });
     } catch (error){
         console.error(error);
         res.status(500).json({ message: "Internal Error: "+error });
