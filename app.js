@@ -13,7 +13,8 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
 const groupsRouter = require('./routes/groups');
-const {MODE} = require("./utils/config");
+const {MODE, ORIGIN} = require("./utils/config");
+const {getIP} = require("./middlewares/utils/getIP");
 
 const app = express();
 
@@ -37,7 +38,20 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}))
-app.use(cors());
+
+const corsOptions = {
+    origin: function (origin, callback) {
+        const allowedOrigins = [ORIGIN, "moz-extension://7ecd9087-60a6-4f7b-a18b-ee054676553c"];
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true)
+            console.log('Access allowed from origin: ' + origin);
+        } else {
+            callback(new Error('Access not allowed from origin: ' + origin + ' to the API'));
+        }
+    },
+    optionsSuccessStatus: 200
+}
+app.use(cors(corsOptions));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

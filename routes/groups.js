@@ -3,7 +3,7 @@ var router = express.Router();
 const { authenticate } = require("../middlewares/auth");
 const { checkUserOwnership } = require("../middlewares/user/index");
 
-const {getParliamentaryGroup, postParliamentaryGroup} = require("../controllers/groups");
+const {getParliamentaryGroup, postParliamentaryGroup, putParliamentaryGroup} = require("../controllers/groups");
 
 /* GET users listing. */
 router.get('/',
@@ -12,6 +12,10 @@ router.get('/',
 
 router.post('/',
     postParliamentaryGroup
+);
+
+router.put('/:id',
+    putParliamentaryGroup
 );
 
 module.exports = router;

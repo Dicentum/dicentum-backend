@@ -10,6 +10,14 @@ const userSchema = new mongoose.Schema({
         trim: true,
         required: 'Please enter your username'
     },
+    name: {
+        type: String,
+        required: 'Please enter your name'
+    },
+    surname: {
+        type: String,
+        required: 'Please enter your surname'
+    },
     description: {
        type: String,
        default: "No description"
