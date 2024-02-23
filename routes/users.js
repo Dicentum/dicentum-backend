@@ -1,5 +1,5 @@
 var express = require('express');
-var router = express.Router();
+const router = express.Router();
 const { authenticate } = require("../middlewares/auth");
 const { checkUserOwnership } = require("../middlewares/user/index");
 
