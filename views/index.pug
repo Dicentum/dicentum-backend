@@ -29,7 +29,22 @@ block content
       a(href='/users/:id') /users/:id
       ul
         li GET (Requires a token)
+
+    div.groups
+      a(href='/groups') /groups
+      ul
+        li GET
+        li POST
+      a(href='/groups/:id') /groups/:id
+      ul
+        li PUT
+        li DELETE
+
     div.end
       h3= 'Client IP'
       div.end
         p The IP of the client is <strong>#{ip}</strong>
+
+    footer(style='color: gray; padding-top: 50px;')
+      p Developed by Pablo
+      p Seville 2024

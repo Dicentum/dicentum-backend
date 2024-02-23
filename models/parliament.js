@@ -10,6 +10,14 @@ const parliamentSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    totalSeats: {
+        type: Number,
+        required: true
+    },
+    admin: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
     parliamentaryGroups: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'ParliamentaryGroup'

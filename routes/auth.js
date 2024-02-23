@@ -12,7 +12,10 @@ router.get('/', authenticate, (req, res) => {
         res.json({
             user: `${req.user.username}`,
             email: `${req.user.email}`,
-            id: `${req.user._id}`
+            userRole: `${req.user.role}`,
+            id: `${req.user._id}`,
+            name: `${req.user.name}`,
+            surname: `${req.user.surname}`
         });
     } catch (error){
         console.error(error);
