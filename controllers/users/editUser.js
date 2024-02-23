@@ -1,5 +1,5 @@
 const User = require("../../models/users");
-const ParlamentaryGroup = require("../../models/parliamentaryGroup")
+const ParliamentaryGroup = require("../../models/parliamentaryGroup")
 
 const editUser = async function (req, res) {
     try {
@@ -13,13 +13,12 @@ const editUser = async function (req, res) {
             return res.status(400).json({ message: 'Email is already taken' });
         }
 
-        if (req.body.parliamentaryGroup && req.body.parliamentaryGroup !== user.parliamentaryGroup) {
+        if (req.body.parliamentaryGroup) {
             const newGroup = await ParliamentaryGroup.findById(req.body.parliamentaryGroup);
             if (!newGroup) {
                 return res.status(404).json({ message: 'Parliamentary group not found' });
             }
-            newGroup.users.push(user._id);
-            await newGroup.save();
+            user.parliamentaryGroup = newGroup._id;
         }
 
         user.email = req.body.email || user.email;
@@ -29,7 +28,6 @@ const editUser = async function (req, res) {
         user.city = req.body.city || user.city;
         user.country = req.body.country || user.country;
         user.photo = req.body.photo || user.photo;
-        user.parliamentaryGroup = req.body.parliamentaryGroup || user.parliamentaryGroup;
 
         const updatedUser = await user.save();
         return res.status(200).json(updatedUser);
