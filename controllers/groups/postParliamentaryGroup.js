@@ -3,22 +3,23 @@ const User = require("../../models/users");
 
 const postParliamentaryGroup = async function (req, res){
     try {
-        const newGroup = new parliamentaryGroup(req.body);
-        if(req.body.users){
-            for(let userId of req.body.users) {
-                const existingUser = await User.findById(userId);
-                if (existingUser?.parliamentaryGroup) {
-                    return res.status(400).json({message: "This user already has a group assigned"});
-                } else if (existingUser) {
-                    existingUser.parliamentaryGroup = newGroup._id;
-                    await existingUser.save();
-                } else {
-                    return res.status(400).json({message: "User not found"});
-                }
-            }
-        }
-        const savedGroup = await newGroup.save();
-        return res.status(200).json(savedGroup);
+        const name = req.body.name.toString();
+        const description = req.body.description.toString();
+        const color = req.body.color.toString();
+        const logo = req.body.logo.toString();
+        const seats = parseInt(req.body.seats);
+
+        const newGroup = new ParliamentaryGroup({
+            name,
+            description,
+            color,
+            logo,
+            seats
+        });
+
+        await newGroup.save();
+
+        res.status(201).json(newGroup);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal Error: "+error });
