@@ -12,7 +12,7 @@ USER dicentumuser
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install --ignore-scripts
+RUN npm install
 
 # Copy only necessary files or directories
 COPY ./bin ./bin
