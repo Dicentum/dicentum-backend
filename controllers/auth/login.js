@@ -3,7 +3,8 @@ const User = require('../../models/users');
 
 // Login with an existing user
 const login = async (req, res, next) => {
-    const { username, password } = req.body;
+    const username = req.body.username.toString();
+    const password = req.body.password.toString();
 
     try {
         const user = await User.findOne({ username });
