@@ -21,7 +21,6 @@ COPY ./middlewares ./middlewares
 COPY ./models ./models
 COPY ./public ./public
 COPY ./routes ./routes
-COPY ./tests ./tests
 COPY ./utils ./utils
 COPY ./views ./views
 COPY ./app.js ./app.js
