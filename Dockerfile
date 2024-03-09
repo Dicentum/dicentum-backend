@@ -24,7 +24,6 @@ COPY ./routes ./routes
 COPY ./tests ./tests
 COPY ./utils ./utils
 COPY ./views ./views
-COPY ./config ./config
 COPY ./app.js ./app.js
 
 # Expose port 3000 (or any other port your Express app uses)
