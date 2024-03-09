@@ -15,16 +15,16 @@ COPY package*.json ./
 RUN npm install --ignore-scripts
 
 # Copy only necessary files or directories
-COPY ../bin ./bin
-COPY ../controllers ./controllers
-COPY ../middlewares ./middlewares
-COPY ../models ./models
-COPY ../public ./public
-COPY ../routes ./routes
-COPY ../tests ./tests
-COPY ../utils ./utils
-COPY ../views ./views
-COPY ../app.js ./app.js
+COPY routes ./routes
+COPY app.js ./app.js
+COPY controllers ./controllers
+COPY tests ./tests
+COPY bin ./bin
+COPY public ./public
+COPY views ./views
+COPY models ./models
+COPY middlewares ./middlewares
+COPY utils ./utils
 
 # Expose port 3000 (or any other port your Express app uses)
 EXPOSE 3000
