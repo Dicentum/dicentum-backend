@@ -8,7 +8,7 @@ const editUser = async function (req, res) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        const existingEmail = await User.findOne({ email: req.body.email });
+        const existingEmail = await User.findOne({ email: req.body.email.toString() });
         if (existingEmail && existingEmail._id.toString() !== req.params.id) {
             return res.status(400).json({ message: 'Email is already taken' });
         }
