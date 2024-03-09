@@ -7,11 +7,13 @@ const postParliamentaryGroup = async function (req, res){
         if(req.body.users){
             for(let userId of req.body.users) {
                 const existingUser = await User.findById(userId);
-                if (existingUser && existingUser.parliamentaryGroup) {
+                if (existingUser?.parliamentaryGroup) {
                     return res.status(400).json({message: "This user already has a group assigned"});
                 } else if (existingUser) {
                     existingUser.parliamentaryGroup = newGroup._id;
                     await existingUser.save();
+                } else {
+                    return res.status(400).json({message: "User not found"});
                 }
             }
         }
