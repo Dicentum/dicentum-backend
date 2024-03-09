@@ -1,11 +1,13 @@
-const {getParliamentaryGroup} = require("./getParliamentaryGroup");
+const {getParliamentaryGroups} = require("./getParliamentaryGroups");
 const {postParliamentaryGroup} = require("./postParliamentaryGroup");
 const {putParliamentaryGroup} = require("./editParliamentaryGroup");
 const {deleteParliamentaryGroup} = require("./deleteParliamentaryGroup");
+const {getParliamentaryGroup} = require("./getParliamentaryGroup");
 
 module.exports = {
-    getParliamentaryGroup,
+    getParliamentaryGroups,
     postParliamentaryGroup,
     putParliamentaryGroup,
-    deleteParliamentaryGroup
+    deleteParliamentaryGroup,
+    getParliamentaryGroup
 }

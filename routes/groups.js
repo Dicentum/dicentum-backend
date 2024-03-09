@@ -3,15 +3,19 @@ const router = express.Router();
 const { authenticate } = require("../middlewares/auth");
 const { checkUserOwnership } = require("../middlewares/user/index");
 
-const {getParliamentaryGroup, postParliamentaryGroup, putParliamentaryGroup} = require("../controllers/groups");
+const {getParliamentaryGroups, postParliamentaryGroup, putParliamentaryGroup, getParliamentaryGroup} = require("../controllers/groups");
 
 /* GET users listing. */
 router.get('/',
-    getParliamentaryGroup
+    getParliamentaryGroups
 );
 
 router.post('/',
     postParliamentaryGroup
+);
+
+router.get('/:id',
+    getParliamentaryGroup
 );
 
 router.put('/:id',
