@@ -2,7 +2,11 @@ const User = require('../../models/users');
 
 // Register a new user
 const register = async (req, res, next) => {
-    const { username, name, surname,  email, password } = req.body;
+    const username = req.body.username.toString();
+    const password = req.body.password.toString();
+    const name = req.body.name.toString();
+    const surname = req.body.surname.toString();
+    const email = req.body.email.toString();
 
     if (!username || !email || !password || !name || !surname) {
         return res.status(400).json({ message: 'Username, name, email, and password are required' });

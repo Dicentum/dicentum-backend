@@ -5,7 +5,6 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
-const bodyParser = require("body-parser");
 const config = require('./utils/config');
 const printer = require('./utils/printer');
 
@@ -14,9 +13,11 @@ const usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
 const groupsRouter = require('./routes/groups');
 const {MODE, ORIGIN} = require("./utils/config");
-const {getIP} = require("./middlewares/utils/getIP");
 
 const app = express();
+
+// Remove version information for possible attackers
+app.disable('x-powered-by');
 
 //Mongoose connection
 mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })

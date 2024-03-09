@@ -1,4 +1,4 @@
-var express = require('express');
+const express = require('express');
 const router = express.Router();
 const { authenticate } = require("../middlewares/auth");
 const { checkUserOwnership } = require("../middlewares/user/index");
