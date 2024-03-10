@@ -8,11 +8,8 @@ const mongoose = require('mongoose');
 const config = require('./utils/config');
 const printer = require('./utils/printer');
 
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
-const authRouter = require('./routes/auth');
-const groupsRouter = require('./routes/groups');
 const {MODE, ORIGIN} = require("./utils/config");
+const {setupRoutes} = require("./routes/main");
 
 const app = express();
 
@@ -54,10 +51,8 @@ const corsOptions = {
 }
 app.use(cors(corsOptions));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/auth', authRouter);
-app.use('/groups', groupsRouter);
+//Setup all the routes
+setupRoutes(app);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -65,7 +60,7 @@ app.use(function(req, res, next) {
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function(err, req, res) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = MODE === 'development' ? err : {};

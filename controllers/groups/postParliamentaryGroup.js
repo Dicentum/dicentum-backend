@@ -1,5 +1,4 @@
-const parliamentaryGroup = require('../../models/parliamentaryGroup');
-const User = require("../../models/users");
+const ParliamentaryGroup = require('../../models/parliamentaryGroup');
 
 const postParliamentaryGroup = async function (req, res){
     try {
@@ -8,13 +7,15 @@ const postParliamentaryGroup = async function (req, res){
         const color = req.body.color.toString();
         const logo = req.body.logo.toString();
         const seats = parseInt(req.body.seats);
+        const users = req.body.users;
 
         const newGroup = new ParliamentaryGroup({
             name,
             description,
             color,
             logo,
-            seats
+            seats,
+            users
         });
 
         await newGroup.save();

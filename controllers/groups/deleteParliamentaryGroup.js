@@ -1,5 +1,6 @@
 const parliamentaryGroup = require('../../models/parliamentaryGroup');
 const User = require("../../models/users");
+const Parliament = require("../../models/parliament");
 
 const deleteParliamentaryGroup = async function (req, res){
     try {
@@ -16,6 +17,15 @@ const deleteParliamentaryGroup = async function (req, res){
                 }
             }
         }
+        const parliaments = await Parliament.find({ parliamentaryGroups: group._id });
+        for (let parliament of parliaments) {
+            const index = parliament.parliamentaryGroups.indexOf(group._id);
+            if (index > -1) {
+                parliament.parliamentaryGroups.splice(index, 1);
+                await parliament.save();
+            }
+        }
+
         await group.remove();
         return res.status(204).json({ message: 'Parliamentary group deleted' });
     } catch (error) {

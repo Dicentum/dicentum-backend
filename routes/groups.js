@@ -1,9 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { authenticate } = require("../middlewares/auth");
-const { checkUserOwnership } = require("../middlewares/user/index");
-
-const {getParliamentaryGroups, postParliamentaryGroup, putParliamentaryGroup, getParliamentaryGroup} = require("../controllers/groups");
+const {getParliamentaryGroups, postParliamentaryGroup, editParliamentaryGroup, getParliamentaryGroup} = require("../controllers/groups");
+const {validateUsersPerSeats} = require("../middlewares/group");
 
 /* GET users listing. */
 router.get('/',
@@ -11,6 +9,7 @@ router.get('/',
 );
 
 router.post('/',
+    validateUsersPerSeats,
     postParliamentaryGroup
 );
 
@@ -19,7 +18,8 @@ router.get('/:id',
 );
 
 router.put('/:id',
-    putParliamentaryGroup
+    validateUsersPerSeats,
+    editParliamentaryGroup
 );
 
 module.exports = router;
