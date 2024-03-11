@@ -44,7 +44,7 @@ const userSchema = new mongoose.Schema({
         required: 'Please enter your password'
     },
     verification: {
-        type: String
+        type: Number
     },
     verified: {
         type: Boolean,

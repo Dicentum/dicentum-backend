@@ -15,6 +15,7 @@ const updateParliamentaryGroupDetails = (group, details) => {
     group.logo = details.logo || group.logo;
     group.seats = details.seats || group.seats;
     group.users = details.users || group.users;
+    group.requestedUsers = details.requestedUsers || group.requestedUsers;
 };
 
 const editParliamentaryGroup = async function (req, res) {

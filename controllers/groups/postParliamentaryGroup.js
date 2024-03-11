@@ -8,6 +8,7 @@ const postParliamentaryGroup = async function (req, res){
         const logo = req.body.logo.toString();
         const seats = parseInt(req.body.seats);
         const users = req.body.users;
+        const requestedUsers = req.body.requestedUsers;
 
         const newGroup = new ParliamentaryGroup({
             name,
@@ -15,7 +16,8 @@ const postParliamentaryGroup = async function (req, res){
             color,
             logo,
             seats,
-            users
+            users,
+            requestedUsers
         });
 
         await newGroup.save();
