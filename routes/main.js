@@ -9,7 +9,7 @@ const setupRoutes = (app) => {
     app.use('/users', usersRouter);
     app.use('/auth', authRouter);
     app.use('/groups', groupsRouter);
-    app.use('/parliament', parliamentRouter);
+    app.use('/parliaments', parliamentRouter);
 };
 
 module.exports = { setupRoutes };

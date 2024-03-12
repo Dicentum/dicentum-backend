@@ -65,6 +65,10 @@ const userSchema = new mongoose.Schema({
     parliamentaryGroup: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'ParliamentaryGroup'
+    },
+    parliamentaryGroupRequest: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ParliamentaryGroup'
     }
 
 }, { timestamps: true });

@@ -1,4 +1,5 @@
 const Parliament = require('../../models/parliament');
+const ParliamentaryGroup = require('../../models/parliamentaryGroup');
 
 const deleteParliament = async function (req, res){
     try {
@@ -6,6 +7,13 @@ const deleteParliament = async function (req, res){
         if (!parliament) {
             return res.status(404).json({ message: 'Parliament not found' });
         }
+
+        const groups = await ParliamentaryGroup.find({ parliament: parliament._id });
+        for (let group of groups) {
+            group.parliament = null;
+            await group.save();
+        }
+
         await parliament.remove();
         return res.status(204).json({ message: 'Parliament deleted' });
     } catch (error) {

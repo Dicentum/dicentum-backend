@@ -16,16 +16,6 @@ const checkEmailExists = async (email, id) => {
     }
 };
 
-const updateParliamentaryGroup = async (user, parliamentaryGroupId) => {
-    if (parliamentaryGroupId) {
-        const newGroup = await ParliamentaryGroup.findById(parliamentaryGroupId);
-        if (!newGroup) {
-            throw new Error('Parliamentary group not found');
-        }
-        user.parliamentaryGroup = newGroup._id;
-    }
-};
-
 const updateUserDetails = (user, details) => {
     user.email = details.email || user.email;
     user.description = details.description || user.description;
@@ -40,7 +30,6 @@ const editUser = async function (req, res) {
     try {
         const user = await checkUserExists(req.params.id);
         await checkEmailExists(req.body.email, req.params.id);
-        await updateParliamentaryGroup(user, req.body.parliamentaryGroup);
         updateUserDetails(user, req.body);
 
         const updatedUser = await user.save();

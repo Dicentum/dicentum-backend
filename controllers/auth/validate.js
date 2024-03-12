@@ -11,6 +11,10 @@ const validate = async (req, res, next) => {
             return res.status(400).json({ message: 'Verification code is required' });
         }
 
+        if(user.verified){
+            return res.status(400).json({ message: 'User already verified' });
+        }
+
         if(user && !user.verified){
             if(verifyCode === user.verification.toString()){
                 user.verified = true;

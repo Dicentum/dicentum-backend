@@ -17,6 +17,16 @@ const deleteParliamentaryGroup = async function (req, res){
                 }
             }
         }
+        if(group.requestedUsers){
+            for(let userId of group.requestedUsers) {
+                const existingUser = await User.findById(userId);
+                if (existingUser) {
+                    existingUser.parliamentaryGroupRequest = null;
+                    await existingUser.save();
+                }
+            }
+        }
+
         const parliaments = await Parliament.find({ parliamentaryGroups: group._id });
         for (let parliament of parliaments) {
             const index = parliament.parliamentaryGroups.indexOf(group._id);
