@@ -1,7 +1,8 @@
 // generateVerificationCode.js
+const crypto = require('crypto');
 
 const generateVerificationCode = () => {
-    const code = Math.floor(100000 + Math.random() * 900000);
+    const code = crypto.randomInt(100000, 999999);
     return code;
 }
 

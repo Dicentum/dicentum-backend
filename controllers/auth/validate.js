@@ -16,7 +16,8 @@ const validate = async (req, res, next) => {
         }
 
         if(user && !user.verified){
-            if(verifyCode === user.verification.toString()){
+            const verificationMatch = await user.compareVerificationCode(verifyCode);
+            if(verificationMatch){
                 user.verified = true;
                 user.verification = null;
                 await user.save();
