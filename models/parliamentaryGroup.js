@@ -25,7 +25,15 @@ const parliamentaryGroupSchema = new mongoose.Schema({
     users: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
-    }]
+    }],
+    requestedUsers: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+    parliament: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Parliament'
+    }
 });
 
 const ParliamentaryGroup = mongoose.model('ParliamentaryGroup', parliamentaryGroupSchema);

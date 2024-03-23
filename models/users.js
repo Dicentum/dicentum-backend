@@ -44,7 +44,7 @@ const userSchema = new mongoose.Schema({
         required: 'Please enter your password'
     },
     verification: {
-        type: String
+        type: Number
     },
     verified: {
         type: Boolean,
@@ -65,6 +65,10 @@ const userSchema = new mongoose.Schema({
     parliamentaryGroup: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'ParliamentaryGroup'
+    },
+    parliamentaryGroupRequest: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ParliamentaryGroup'
     }
 
 }, { timestamps: true });
@@ -82,10 +86,23 @@ userSchema.pre('save', async function (next) {
         return next(error);
     }
 });
+userSchema.pre('save', async function (next) {
+    const user = this;
+    if (!user.isModified('verification')) return next();
 
-// Compare the given password with the hashed password in the database
+    try {
+        user.verification = await bcrypt.hash(user.verification.toString(), Number(bcryptSalt));
+        next();
+    } catch (error) {
+        return next(error);
+    }
+});
+
 userSchema.methods.comparePassword = async function (password) {
     return bcrypt.compare(password, this.password);
+};
+userSchema.methods.compareVerificationCode = async function (verificationCode) {
+    return bcrypt.compare(verificationCode.toString(), this.verification);
 };
 
 const User = mongoose.model('User', userSchema);

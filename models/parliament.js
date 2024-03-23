@@ -6,6 +6,11 @@ const parliamentSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    description: {
+        type: String,
+        default: 'Without description',
+        required: true
+    },
     location: {
         type: String,
         required: true
