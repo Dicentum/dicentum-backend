@@ -2,13 +2,13 @@ const ParliamentaryGroup = require("../../models/parliamentaryGroup");
 const {checkParliamentaryGroupExists, checkUserExists} = require("./validators");
 
 const updateParliamentaryGroupDetails = (group, details) => {
-    group.name = details.name || group.name;
-    group.description = details.description || group.description;
-    group.color = details.color || group.color;
-    group.logo = details.logo || group.logo;
-    group.seats = details.seats || group.seats;
-    group.users = details.users || group.users;
-    group.requestedUsers = details.requestedUsers || group.requestedUsers;
+    if ('name' in details) group.name = details.name;
+    if ('description' in details) group.description = details.description;
+    if ('color' in details) group.color = details.color;
+    if ('logo' in details) group.logo = details.logo;
+    if ('seats' in details) group.seats = details.seats;
+    if ('users' in details) group.users = details.users;
+    if ('requestedUsers' in details) group.requestedUsers = details.requestedUsers;
 };
 
 const editParliamentaryGroup = async function (req, res) {
@@ -17,15 +17,15 @@ const editParliamentaryGroup = async function (req, res) {
         const oldUsers = [...group.users];
         const oldRequestedUsers = [...group.requestedUsers];
 
-        group.set(req.body);
+        updateParliamentaryGroupDetails(group, req.body);
 
-        if(req.body.users && req.body.users.length > group.seats) {
+        if(Array.isArray(group.users) && group.users.length > group.seats) {
             return res.status(400).json({ message: "Number of users cannot be greater than the number of seats" });
         }
 
-        if(req.body.users && req.body.requestedUsers){
-            for (const user of req.body.users) {
-                if(req.body.requestedUsers.includes(user)){
+        if(Array.isArray(group.users) && Array.isArray(group.requestedUsers)){
+            for (const user of group.users) {
+                if(group.requestedUsers.includes(user)){
                     return res.status(400).json({ message: "A user cannot be both in users and requestedUsers" });
                 }
                 const userExists = await checkUserExists(user);
@@ -37,7 +37,7 @@ const editParliamentaryGroup = async function (req, res) {
                     await userExists.save();
                 }
             }
-            for (const user of req.body.requestedUsers) {
+            for (const user of group.requestedUsers) {
                 const userExists = await checkUserExists(user);
                 const userGroupRequest = userExists.parliamentaryGroupRequest;
                 if (userGroupRequest && userGroupRequest.toString() !== group._id.toString()) {
@@ -49,7 +49,7 @@ const editParliamentaryGroup = async function (req, res) {
             }
         }
         // Handle removed users
-        const removedUsers = oldUsers.filter(user => !req.body.users.includes(user));
+        const removedUsers = oldUsers.filter(user => !group.users.includes(user));
         for (const userId of removedUsers) {
             const user = await checkUserExists(userId);
             user.parliamentaryGroup = null;
@@ -57,7 +57,7 @@ const editParliamentaryGroup = async function (req, res) {
         }
 
         // Handle removed requested users
-        const removedRequestedUsers = oldRequestedUsers.filter(user => !req.body.requestedUsers.includes(user));
+        const removedRequestedUsers = oldRequestedUsers.filter(user => !group.requestedUsers.includes(user));
         for (const userId of removedRequestedUsers) {
             const user = await checkUserExists(userId);
             user.parliamentaryGroupRequest = null;

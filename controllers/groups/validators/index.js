@@ -1,5 +1,5 @@
-const { checkUserExists } = require('./validators/index');
-const { checkParliamentaryGroupExists } = require('./validators/index');
+const { checkUserExists } = require('./checkUserExists');
+const { checkParliamentaryGroupExists } = require('./checkParliamentaryGroup');
 
 module.exports = {
     checkUserExists,

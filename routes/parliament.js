@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {getParliaments, getParliament, postParliament, editParliament} = require("../controllers/parliament");
-const {validateAdminUser, validateTotalSeats} = require("../middlewares/parliament");
+const {validateAdminUser, validateTotalSeats, validatePartialSeats} = require("../middlewares/parliament");
 
 router.get('/',
     getParliaments
@@ -9,7 +9,7 @@ router.get('/',
 
 router.post('/',
     validateAdminUser,
-    validateTotalSeats,
+    validatePartialSeats,
     postParliament
 );
 
@@ -19,7 +19,7 @@ router.get('/:id',
 
 router.put('/:id',
     validateAdminUser,
-    validateTotalSeats,
+    validatePartialSeats,
     editParliament
 );
 

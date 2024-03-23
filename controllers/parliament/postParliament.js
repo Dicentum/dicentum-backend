@@ -1,14 +1,15 @@
 const Parliament = require('../../models/parliament');
 const User = require("../../models/users");
-const { ParliamentaryGroup } = require("../../models/parliamentaryGroup");
+const ParliamentaryGroup = require("../../models/parliamentaryGroup");
 
 const postParliament = async function (req, res){
     try {
         const name = req.body.name.toString();
+        const description = req.body.description.toString();
         const location = req.body.location.toString();
         const totalSeats = parseInt(req.body.totalSeats);
         const admin = req.body.admin;
-        const parliamentaryGroups = req.body.parliamentaryGroups;
+        const parliamentaryGroups = req.body.parliamentaryGroups.split(',');
 
         const adminUser = await User.findById(admin);
         if (!adminUser || adminUser.role !== 'admin') {
@@ -30,7 +31,9 @@ const postParliament = async function (req, res){
         if(parliamentaryGroups){
             let totalGroupSeats = 0;
             for (const group of parliamentaryGroups) {
-                const groupExists = await ParliamentaryGroup.findById(group);
+                const groupId = group.toString();
+                console.log(groupId);
+                const groupExists = await ParliamentaryGroup.findById(groupId);
                 if (groupExists.parliament){
                     return res.status(400).json({ message: "Parliamentary group already in a parliament" });
                 } else {

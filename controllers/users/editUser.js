@@ -17,13 +17,13 @@ const checkEmailExists = async (email, id) => {
 };
 
 const updateUserDetails = (user, details) => {
-    user.email = details.email || user.email;
-    user.description = details.description || user.description;
-    user.role = details.role || user.role;
-    user.phone = details.phone || user.phone;
-    user.city = details.city || user.city;
-    user.country = details.country || user.country;
-    user.photo = details.photo || user.photo;
+    if ('email' in details) user.email = details.email;
+    if ('description' in details) user.description = details.description;
+    if ('role' in details) user.role = details.role;
+    if ('phone' in details) user.phone = details.phone;
+    if ('city' in details) user.city = details.city;
+    if ('country' in details) user.country = details.country;
+    if ('photo' in details) user.photo = details.photo;
 };
 
 const editUser = async function (req, res) {

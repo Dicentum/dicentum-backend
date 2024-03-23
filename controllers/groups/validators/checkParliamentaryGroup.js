@@ -1,4 +1,5 @@
-const ParliamentaryGroup = require("../../models/parliamentaryGroup");
+const ParliamentaryGroup = require("../../../models/parliamentaryGroup");
+
 
 const checkParliamentaryGroupExists = async (id) => {
     const group = await ParliamentaryGroup.findById(id);

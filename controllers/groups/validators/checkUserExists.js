@@ -1,4 +1,4 @@
-const User = require("../models/users");
+const User = require("../../../models/users");
 
 const checkUserExists = async (id) => {
     const user = await User.findById(id);

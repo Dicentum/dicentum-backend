@@ -1,6 +1,6 @@
 const ParliamentaryGroup = require('../../models/parliamentaryGroup');
 const User = require("../../models/users");
-const { checkUserExists } = require('./validators/index');
+const { checkUserExists } = require("./validators");
 
 const postParliamentaryGroup = async function (req, res){
     try {

@@ -4,32 +4,34 @@ const User = require("../../models/users");
 const { checkParliamentExists } = require("./validators/checkParliamentExists");
 
 const updateParliamentDetails = (parliament, details) => {
-    parliament.name = details.name || parliament.name;
-    parliament.location = details.location || parliament.location;
-    parliament.totalSeats = details.totalSeats || parliament.totalSeats;
-    parliament.admin = details.admin || parliament.admin;
-    parliament.parliamentaryGroups = details.parliamentaryGroups || parliament.parliamentaryGroups;
+    if ('name' in details) parliament.name = details.name;
+    if('description' in details) parliament.description = details.description;
+    if ('location' in details) parliament.location = details.location;
+    if ('totalSeats' in details) parliament.totalSeats = details.totalSeats;
+    if ('admin' in details) parliament.admin = details.admin;
+    if ('parliamentaryGroups' in details) parliament.parliamentaryGroups = details.parliamentaryGroups.split(",");
 };
 
 const editParliament = async function (req, res) {
     try {
         const parliament = await checkParliamentExists(req.params.id);
+        updateParliamentDetails(parliament, req.body);
 
-        if (req.body.totalSeats < 1) {
+        if (parliament.totalSeats < 1) {
             return res.status(400).json({ message: "Total seats must be greater than 0" });
         }
-        if(req.body.admin){
-            const adminUser = await User.findById(req.body.admin);
+        if(parliament.admin){
+            const adminUser = await User.findById(parliament.admin);
             if (!adminUser || adminUser.role !== 'admin') {
                 return res.status(400).json({ message: "Admin user not found or not an admin" });
             }
         }
 
-        const parliamentaryGroups = req.body.parliamentaryGroups;
+        const parliamentaryGroups = parliament.parliamentaryGroups;
         if (parliamentaryGroups) {
             let totalGroupSeats = 0;
             for (const groupId of parliamentaryGroups) {
-                const group = await ParliamentaryGroup.findById(groupId);
+                const group = await ParliamentaryGroup.findById(groupId.toString());
                 if (!group) {
                     return res.status(400).json({ message: "Parliamentary group not found" });
                 }
@@ -40,12 +42,10 @@ const editParliament = async function (req, res) {
                 await group.save();
                 totalGroupSeats += group.seats;
             }
-            if (totalGroupSeats > req.body.totalSeats) {
+            if (totalGroupSeats > parliament.totalSeats) {
                 return res.status(400).json({ message: "Sum of parliamentary group seats cannot be greater than total seats" });
             }
         }
-
-        updateParliamentDetails(parliament, req.body);
 
         const updatedParliament = await parliament.save();
         return res.status(200).json(updatedParliament);
