@@ -24,7 +24,7 @@ const register = async (req, res, next) => {
         }
 
         const username = await createUniqueUsername(name, surname);
-        const verification = generateVerificationCode();
+        const verification = generateVerificationCode().toString();
 
         const existingEmail = await User.findOne({ email });
         if (existingEmail) {

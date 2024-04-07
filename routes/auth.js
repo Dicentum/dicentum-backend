@@ -16,7 +16,8 @@ router.get('/', authenticate, (req, res) => {
             userRole: `${req.user.role}`,
             id: `${req.user._id}`,
             name: `${req.user.name}`,
-            surname: `${req.user.surname}`
+            surname: `${req.user.surname}`,
+            photo: `${req.user.photo}`,
         });
     } catch (error){
         console.error(error);

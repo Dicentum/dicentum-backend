@@ -14,14 +14,18 @@ const debateSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
+    isClosed: {
+        type: Boolean,
+        default: false
+    },
+    voting: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Voting'
+    },
     parliament: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Parliament'
-    },
-    messages: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Message'
-    }]
+    }
 });
 
 const Debate = mongoose.model('Debate', debateSchema);

@@ -3,6 +3,7 @@ const usersRouter = require('./users');
 const authRouter = require('./auth');
 const groupsRouter = require('./groups');
 const parliamentRouter = require('./parliament');
+const filesRouter = require('./files');
 
 const setupRoutes = (app) => {
     app.use('/', indexRouter);
@@ -10,6 +11,7 @@ const setupRoutes = (app) => {
     app.use('/auth', authRouter);
     app.use('/groups', groupsRouter);
     app.use('/parliaments', parliamentRouter);
+    app.use('/files', filesRouter);
 };
 
 module.exports = { setupRoutes };

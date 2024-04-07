@@ -1,5 +1,6 @@
 const User = require("../../models/users");
 const ParliamentaryGroup = require("../../models/parliamentaryGroup");
+const Image = require("../../models/image");
 
 const checkUserExists = async (id) => {
     const user = await User.findById(id);
@@ -16,21 +17,41 @@ const checkEmailExists = async (email, id) => {
     }
 };
 
-const updateUserDetails = (user, details) => {
-    if ('email' in details) user.email = details.email;
+const updateUserDetails = async (user, details, file) => {
+    if ('name' in details) user.name = details.name;
+    if ('surname' in details) user.surname = details.surname;
     if ('description' in details) user.description = details.description;
     if ('role' in details) user.role = details.role;
     if ('phone' in details) user.phone = details.phone;
     if ('city' in details) user.city = details.city;
     if ('country' in details) user.country = details.country;
-    if ('photo' in details) user.photo = details.photo;
+
+    if (file) {
+        if(file.mimetype == 'image/jpg' || file.mimetype == 'image/png' || file.mimetype == 'image/jpeg') {
+          //  if(file.mimetype == 'image/jpeg') file.filename = file.filename + '.jpeg';
+           // if(file.mimetype == 'image/png') file.filename = file.filename + '.png';
+            //if(file.mimetype == 'image/jpg') file.filename = file.filename + '.jpg';
+            //console.log(file);
+            const image = new Image({
+                filename: file.filename,
+                path: file.path
+            });
+            await image.save();
+            user.photo = image._id;
+        } else {
+            throw new Error('Invalid file type');
+        }
+    }
+
+    if ('parliamentaryGroupRequest' in details) user.parliamentaryGroupRequest = details.parliamentaryGroupRequest;
 };
 
 const editUser = async function (req, res) {
     try {
+        console.log(req.file);
         const user = await checkUserExists(req.params.id);
-        await checkEmailExists(req.body.email, req.params.id);
-        updateUserDetails(user, req.body);
+        await updateUserDetails(user, req.body, req.file);
+        await checkEmailExists(user.email, req.params.id);
 
         const updatedUser = await user.save();
         return res.status(200).json(updatedUser);

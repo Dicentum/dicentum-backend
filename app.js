@@ -42,7 +42,6 @@ const corsOptions = {
         const allowedOrigins = [ORIGIN, "moz-extension://7ecd9087-60a6-4f7b-a18b-ee054676553c"];
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true)
-            console.log('Access allowed from origin: ' + origin);
         } else {
             callback(new Error('Access not allowed from origin: ' + origin + ' to the API'));
         }

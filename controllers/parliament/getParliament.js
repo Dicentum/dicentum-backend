@@ -2,7 +2,7 @@ const parliament = require('../../models/parliament');
 
 const getParliament = async function (req, res){
     try {
-        if (req.params.id === 'undefined') {
+        if (req.params.id === 'undefined' || req.params.id === 'null' || req.params.id === '0') {
             return res.status(404).json({ message: 'Parliament does not exist' });
         }
         const gParliament = await parliament.findById(req.params.id);

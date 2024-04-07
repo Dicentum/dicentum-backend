@@ -9,7 +9,9 @@ const updateParliamentDetails = (parliament, details) => {
     if ('location' in details) parliament.location = details.location;
     if ('totalSeats' in details) parliament.totalSeats = details.totalSeats;
     if ('admin' in details) parliament.admin = details.admin;
-    if ('parliamentaryGroups' in details) parliament.parliamentaryGroups = details.parliamentaryGroups.split(",");
+    if ('parliamentaryGroups' in details && details.parliamentaryGroups) {
+        parliament.parliamentaryGroups = [...details.parliamentaryGroups];
+    }
 };
 
 const editParliament = async function (req, res) {
@@ -46,9 +48,8 @@ const editParliament = async function (req, res) {
                 return res.status(400).json({ message: "Sum of parliamentary group seats cannot be greater than total seats" });
             }
         }
-
         const updatedParliament = await parliament.save();
-        return res.status(200).json(updatedParliament);
+       return res.status(200).json(updatedParliament);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal Error: "+error });

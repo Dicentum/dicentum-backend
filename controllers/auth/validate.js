@@ -6,7 +6,7 @@ const validate = async (req, res, next) => {
         }
         const user = await User.findById(req.params.id);
         const verifyCode = req.body.verification.toString();
-
+        
         if(!verifyCode){
             return res.status(400).json({ message: 'Verification code is required' });
         }
