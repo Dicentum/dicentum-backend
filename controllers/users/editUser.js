@@ -28,10 +28,6 @@ const updateUserDetails = async (user, details, file) => {
 
     if (file) {
         if(file.mimetype == 'image/jpg' || file.mimetype == 'image/png' || file.mimetype == 'image/jpeg') {
-          //  if(file.mimetype == 'image/jpeg') file.filename = file.filename + '.jpeg';
-           // if(file.mimetype == 'image/png') file.filename = file.filename + '.png';
-            //if(file.mimetype == 'image/jpg') file.filename = file.filename + '.jpg';
-            //console.log(file);
             const image = new Image({
                 filename: file.filename,
                 path: file.path
@@ -48,7 +44,6 @@ const updateUserDetails = async (user, details, file) => {
 
 const editUser = async function (req, res) {
     try {
-        console.log(req.file);
         const user = await checkUserExists(req.params.id);
         await updateUserDetails(user, req.body, req.file);
         await checkEmailExists(user.email, req.params.id);

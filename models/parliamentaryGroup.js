@@ -15,8 +15,7 @@ const parliamentaryGroupSchema = new mongoose.Schema({
         required: true
     },
     logo: {
-        type: String,
-        required: true
+        type: String
     },
     seats: {
         type: Number,

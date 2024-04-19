@@ -31,7 +31,7 @@ RUN chown -R dicentumuser:dicentumuser /usr/src/app
 USER dicentumuser
 
 # Install dependencies
-RUN npm install --ignore-scripts
+RUN npm install
 
 # Expose port 3000 (or any other port your Express app uses)
 EXPOSE 3000

@@ -1,5 +1,5 @@
 const express = require('express');
-const { register, login, validate } = require('../controllers/auth');
+const { register, login, validate, registerKeyStart, registerKeyFinish } = require('../controllers/auth');
 const { authenticate } = require("../middlewares/auth");
 
 const router = express.Router();
@@ -7,6 +7,16 @@ const router = express.Router();
 router.post('/register', register);
 router.post('/login', login);
 router.post('/validate/:id', validate);
+
+router.post('/registerKey/start',
+    authenticate,
+    registerKeyStart
+);
+
+router.post('/registerKey/finish',
+    authenticate,
+    registerKeyFinish
+);
 
 router.get('/', authenticate, (req, res) => {
     try {

@@ -4,7 +4,7 @@ const {getParliamentaryGroups, postParliamentaryGroup, editParliamentaryGroup, g
     approveRequestParliamentaryGroup
 } = require("../controllers/groups");
 const {validateUsersPerSeats} = require("../middlewares/group");
-const {checkCast} = require("../middlewares/utils");
+const {checkCast, validId} = require("../middlewares/utils");
 const {checkUserRole} = require("../middlewares/user/checkUserRole");
 
 /* GET users listing. */
@@ -18,8 +18,9 @@ router.post('/',
 );
 
 router.get('/:id',
+    validId,
     checkCast,
-    getParliamentaryGroup
+    getParliamentaryGroup,
 );
 
 router.put('/:id',

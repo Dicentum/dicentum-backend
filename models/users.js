@@ -43,6 +43,16 @@ const userSchema = new mongoose.Schema({
         trim: true,
         required: 'Please enter your password'
     },
+    credentialId: {
+        type: String
+    },
+    credentialPublicKey: {
+        type: String
+    },
+    counter: {
+        type: Number,
+        default: 0
+    },
     verification: {
         type: String
     },

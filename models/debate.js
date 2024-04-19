@@ -18,10 +18,16 @@ const debateSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    voting: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Voting'
+    startDateVote: {
+        type: Date,
     },
+    endDateVote: {
+        type: Date,
+    },
+    userVotes: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'userVotes'
+    }],
     parliament: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Parliament'

@@ -17,7 +17,7 @@ const app = express();
 app.disable('x-powered-by');
 
 //Mongoose connection
-mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(config.MONGODB_URI, {})
     .then(() => {
       printer.info('Connection to MongoDB Atlas completed!');
     })
