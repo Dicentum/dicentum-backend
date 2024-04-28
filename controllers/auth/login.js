@@ -13,8 +13,6 @@ const login = async (req, res, next) => {
         }
         const passwordMatch = await user.comparePassword(password);
         if (!passwordMatch) {
-            user.counter += 1;
-            await user.save();
             return res.status(401).json({ message: 'Failed to login. Please check your credentials and try again' });
         }
         const expiresIn = '1 hour';

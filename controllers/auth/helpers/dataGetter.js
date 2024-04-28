@@ -1,36 +1,22 @@
-function uintToString(a) {
-    const base64string = btoa(String.fromCharCode(...a));
-    return base64string.replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
-}
+const User = require('../../../models/users');
+const Passkey = require("../../../models/passkey");
 
-function base64ToUint8Array(str) {
-    str = str.replace(/-/g, '+').replace(/_/g, '/').replace(/\s/g, '');
-    return new Uint8Array(Array.prototype.map.call(atob(str), (c) => c.charCodeAt(0)));
-}
-
-function getSavedAuthenticatorData(user) {
-    return {
-        credentialID: base64ToUint8Array(user.credentialID),
-        credentialPublicKey: base64ToUint8Array(user.credentialPublicKey),
-        counter: user.counter,
+const getUserPasskeys = async (user) => {
+    const passkeys = await Passkey.find({ user: user._id });
+    if(!passkeys){
+       return [];
+    } else {
+        return passkeys;
     }
-}
-
-function getRegistrationInfo(registrationInfo) {
-    const {credentialPublicKey, counter, credentialID} = registrationInfo;
-    return {
-        credentialID: uintToString(credentialID),
-        credentialPublicKey: uintToString(credentialPublicKey),
-        counter,
+};
+const getUserPasskey = async (user, passkeyId) => {
+    try {
+        const passkey = await Passkey.findOne({user: user.id, credentialID: passkeyId});
+        return passkey;
+    } catch (error) {
+        console.error(error.message);
+        return null;
     }
-}
+};
 
-function getNewChallenge() {
-    return Math.random().toString(36).substring(2);
-}
-
-function convertChallenge(challenge) {
-    return btoa(challenge).replaceAll('=', '');
-}
-
-module.exports = {getSavedAuthenticatorData,getRegistrationInfo, getNewChallenge, convertChallenge}
+module.exports = { getUserPasskeys, getUserPasskey };

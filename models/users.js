@@ -43,22 +43,15 @@ const userSchema = new mongoose.Schema({
         trim: true,
         required: 'Please enter your password'
     },
-    credentialId: {
-        type: String
-    },
-    credentialPublicKey: {
-        type: String
-    },
-    counter: {
-        type: Number,
-        default: 0
-    },
     verification: {
         type: String
     },
     verified: {
         type: Boolean,
         default: false
+    },
+    options: {
+        type: mongoose.Schema.Types.Mixed
     },
     phone: {
         type: String
@@ -72,6 +65,10 @@ const userSchema = new mongoose.Schema({
     photo: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Image'
+    },
+    passkeys: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Passkey'
     },
     parliamentaryGroup: {
         type: mongoose.Schema.Types.ObjectId,

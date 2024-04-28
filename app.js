@@ -10,11 +10,15 @@ const printer = require('./utils/printer');
 
 const {MODE, ORIGIN} = require("./utils/config");
 const {setupRoutes} = require("./routes/main");
+const { setupSession } = require("./utils/session");
 
 const app = express();
 
 // Remove version information for possible attackers
 app.disable('x-powered-by');
+
+//Setup session
+setupSession(app);
 
 //Mongoose connection
 mongoose.connect(config.MONGODB_URI, {})
