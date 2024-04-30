@@ -7,7 +7,7 @@ const setupSession = (app) => {
         resave: false,
         saveUninitialized: false,
         cookie: {
-            secure: false,
+            secure: true,
         }
     }));
 };
