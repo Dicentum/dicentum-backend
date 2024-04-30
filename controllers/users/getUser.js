@@ -3,7 +3,7 @@ const User = require("../../models/users");
 const getUser = async function (req, res) {
     try{
         const { id } = req.params;
-        const user = await User.findById(id);
+        const user = await User.findById(id.toString()).select('-password -verification -verified -createdAt -updatedAt');
         return res.status(200).json(user);
     }
     catch (error){

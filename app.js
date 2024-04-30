@@ -8,19 +8,20 @@ const mongoose = require('mongoose');
 const config = require('./utils/config');
 const printer = require('./utils/printer');
 
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
-const authRouter = require('./routes/auth');
-const groupsRouter = require('./routes/groups');
 const {MODE, ORIGIN} = require("./utils/config");
+const {setupRoutes} = require("./routes/main");
+const { setupSession } = require("./utils/session");
 
 const app = express();
 
 // Remove version information for possible attackers
 app.disable('x-powered-by');
 
+//Setup session
+setupSession(app);
+
 //Mongoose connection
-mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(config.MONGODB_URI, {})
     .then(() => {
       printer.info('Connection to MongoDB Atlas completed!');
     })
@@ -45,7 +46,6 @@ const corsOptions = {
         const allowedOrigins = [ORIGIN, "moz-extension://7ecd9087-60a6-4f7b-a18b-ee054676553c"];
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true)
-            console.log('Access allowed from origin: ' + origin);
         } else {
             callback(new Error('Access not allowed from origin: ' + origin + ' to the API'));
         }
@@ -54,10 +54,8 @@ const corsOptions = {
 }
 app.use(cors(corsOptions));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/auth', authRouter);
-app.use('/groups', groupsRouter);
+//Setup all the routes
+setupRoutes(app);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -65,7 +63,7 @@ app.use(function(req, res, next) {
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function(err, req, res) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = MODE === 'development' ? err : {};

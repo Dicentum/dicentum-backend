@@ -40,6 +40,31 @@ block content
         li PUT
         li DELETE
 
+    div.parliament
+      a(href='/parliaments') /parliaments
+      ul
+        li GET
+        li POST
+      a(href='/parliaments/:id') /parliaments/:id
+      ul
+        li PUT
+        li DELETE
+
+    div.debates
+      a(href='/debates') /debates
+      ul
+        li GET
+        li POST
+      a(href='/debates/:id') /debates/:id
+      ul
+        li PUT
+        li DELETE
+
+    div.image
+      a(href='files/image/:id') files/image/:id
+      ul
+        li GET (Requires a token)
+
     div.end
       h3= 'Client IP'
       div.end

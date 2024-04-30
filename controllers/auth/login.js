@@ -9,11 +9,11 @@ const login = async (req, res, next) => {
     try {
         const user = await User.findOne({ username });
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'Failed to login. Please check your credentials and try again' });
         }
         const passwordMatch = await user.comparePassword(password);
         if (!passwordMatch) {
-            return res.status(401).json({ message: 'Incorrect password' });
+            return res.status(401).json({ message: 'Failed to login. Please check your credentials and try again' });
         }
         const expiresIn = '1 hour';
         const expiration = Math.floor(Date.now() / 1000) + (60 * 60); // 1 hour from now

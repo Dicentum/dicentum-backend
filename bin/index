@@ -6,6 +6,8 @@
 const app = require('../app');
 const debug = require('debug')('debatus-backend:server');
 const http = require('http');
+const https = require('https');
+const fs = require('fs');
 const config = require('../utils/config');
 const printer = require('../utils/printer');
 
@@ -16,10 +18,21 @@ const port = normalizePort(config.PORT || '3000');
 app.set('port', port);
 
 /**
- * Create HTTP server.
+ * Create HTTP server. or HTTPS server if ENABLE_HTTPS is set to true
  */
 
-const server = http.createServer(app);
+let server;
+
+if (process.env.ENABLE_HTTPS === 'true' && process.env.NODE_ENV === 'development') {
+  server = https.createServer({
+    key: fs.readFileSync(`./certificates/${process.env.RP_ID_PASSKEY}-key.pem`),
+    cert: fs.readFileSync(`./certificates/${process.env.RP_ID_PASSKEY}.pem`),
+  }, app);
+} else if (process.env.ENABLE_HTTPS === 'true' && process.env.NODE_ENV !== 'development'){
+  server = https.createServer(app);
+} else {
+  server = http.createServer(app);
+}
 
 /**
  * Listen on provided port, on all network interfaces.

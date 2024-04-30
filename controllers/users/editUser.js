@@ -1,5 +1,6 @@
 const User = require("../../models/users");
 const ParliamentaryGroup = require("../../models/parliamentaryGroup");
+const Image = require("../../models/image");
 
 const checkUserExists = async (id) => {
     const user = await User.findById(id);
@@ -16,32 +17,36 @@ const checkEmailExists = async (email, id) => {
     }
 };
 
-const updateParliamentaryGroup = async (user, parliamentaryGroupId) => {
-    if (parliamentaryGroupId) {
-        const newGroup = await ParliamentaryGroup.findById(parliamentaryGroupId);
-        if (!newGroup) {
-            throw new Error('Parliamentary group not found');
-        }
-        user.parliamentaryGroup = newGroup._id;
-    }
-};
+const updateUserDetails = async (user, details, file) => {
+    if ('name' in details) user.name = details.name;
+    if ('surname' in details) user.surname = details.surname;
+    if ('description' in details) user.description = details.description;
+    if ('role' in details) user.role = details.role;
+    if ('phone' in details) user.phone = details.phone;
+    if ('city' in details) user.city = details.city;
+    if ('country' in details) user.country = details.country;
 
-const updateUserDetails = (user, details) => {
-    user.email = details.email || user.email;
-    user.description = details.description || user.description;
-    user.role = details.role || user.role;
-    user.phone = details.phone || user.phone;
-    user.city = details.city || user.city;
-    user.country = details.country || user.country;
-    user.photo = details.photo || user.photo;
+    if (file) {
+        if(file.mimetype == 'image/jpg' || file.mimetype == 'image/png' || file.mimetype == 'image/jpeg') {
+            const image = new Image({
+                filename: file.filename,
+                path: file.path
+            });
+            await image.save();
+            user.photo = image._id;
+        } else {
+            throw new Error('Invalid file type');
+        }
+    }
+
+    if ('parliamentaryGroupRequest' in details) user.parliamentaryGroupRequest = details.parliamentaryGroupRequest;
 };
 
 const editUser = async function (req, res) {
     try {
         const user = await checkUserExists(req.params.id);
-        await checkEmailExists(req.body.email, req.params.id);
-        await updateParliamentaryGroup(user, req.body.parliamentaryGroup);
-        updateUserDetails(user, req.body);
+        await updateUserDetails(user, req.body, req.file);
+        await checkEmailExists(user.email, req.params.id);
 
         const updatedUser = await user.save();
         return res.status(200).json(updatedUser);

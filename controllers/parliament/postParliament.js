@@ -2,28 +2,22 @@ const Parliament = require('../../models/parliament');
 const User = require("../../models/users");
 const ParliamentaryGroup = require("../../models/parliamentaryGroup");
 
-const postParliamentaryGroup = async function (req, res){
+const postParliament = async function (req, res){
     try {
         const name = req.body.name.toString();
+        const description = req.body.description.toString();
         const location = req.body.location.toString();
         const totalSeats = parseInt(req.body.totalSeats);
-        const admin = req.body.admin;
-        const parliamentaryGroups = req.body.parliamentaryGroups;
+        const admin = req.body.admin.toString();
+        const parliamentaryGroups = req.body.parliamentaryGroups.split(',');
 
         const adminUser = await User.findById(admin);
         if (!adminUser || adminUser.role !== 'admin') {
             return res.status(400).json({ message: "Admin user not found or not an admin" });
         }
 
-        let totalGroupSeats = 0;
-        for (let groupId of parliamentaryGroups) {
-            const group = await ParliamentaryGroup.findById(groupId);
-            if (group) {
-                totalGroupSeats += group.seats;
-            }
-        }
-        if (totalSeats !== totalGroupSeats) {
-            return res.status(400).json({ message: "Total seats is not equal to the sum of the seats of all the parliamentary groups" });
+        if (totalSeats < 1) {
+            return res.status(400).json({ message: "Total seats must be a positive number" });
         }
 
         const newParliament = new Parliament({
@@ -31,8 +25,27 @@ const postParliamentaryGroup = async function (req, res){
             location,
             totalSeats,
             admin,
-            parliamentaryGroups
+            parliamentaryGroups,
         });
+
+        if(parliamentaryGroups){
+            let totalGroupSeats = 0;
+            for (const group of parliamentaryGroups) {
+                const groupId = group.toString();
+                console.log(groupId);
+                const groupExists = await ParliamentaryGroup.findById(groupId);
+                if (groupExists.parliament){
+                    return res.status(400).json({ message: "Parliamentary group already in a parliament" });
+                } else {
+                    groupExists.parliament = newParliament._id;
+                    await groupExists.save();
+                }
+                totalGroupSeats += groupExists.seats;
+            }
+            if (totalGroupSeats > totalSeats) {
+                return res.status(400).json({ message: "Sum of parliamentary group seats cannot be greater than total seats" });
+            }
+        }
 
         await newParliament.save();
         return res.status(201).json(newParliament);
@@ -42,4 +55,4 @@ const postParliamentaryGroup = async function (req, res){
     }
 }
 
-module.exports = {postParliamentaryGroup};
+module.exports = {postParliament};

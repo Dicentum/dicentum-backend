@@ -9,6 +9,19 @@
 ```bash
 npm install
 ```
+### Create a .env file
+```bash
+MONGODB_URI='' #URL for the MongoDB
+PORT= #Number of the port
+SECRET_KEY='' #For JWT
+BCRYPT_SALT= #Number
+NODE_ENV='development'
+ORIGIN='http://localhost:5173' #For the frontend
+TRANSPORTER_EMAIL_USER='' #Email for the transporter
+TRANSPORTER_EMAIL_PASS='' #Password for the transporter
+TRANSPORTER_EMAIL_HOST='' #Email host for the transporter
+TRANSPORTER_EMAIL_PORT=587 #Email port for the transporter
+```
 ## Usage
 ### Run development server
 ```bash

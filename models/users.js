@@ -50,6 +50,9 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    options: {
+        type: mongoose.Schema.Types.Mixed
+    },
     phone: {
         type: String
     },
@@ -60,9 +63,18 @@ const userSchema = new mongoose.Schema({
         type: String
     },
     photo: {
-        type: String
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Image'
+    },
+    passkeys: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Passkey'
     },
     parliamentaryGroup: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ParliamentaryGroup'
+    },
+    parliamentaryGroupRequest: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'ParliamentaryGroup'
     }
@@ -82,10 +94,23 @@ userSchema.pre('save', async function (next) {
         return next(error);
     }
 });
+userSchema.pre('save', async function (next) {
+    const user = this;
+    if (!user.isModified('verification') || !user.verification) return next();
 
-// Compare the given password with the hashed password in the database
+    try {
+        user.verification = await bcrypt.hash(user.verification, Number(bcryptSalt));
+        next();
+    } catch (error) {
+        return next(error);
+    }
+});
+
 userSchema.methods.comparePassword = async function (password) {
     return bcrypt.compare(password, this.password);
+};
+userSchema.methods.compareVerificationCode = async function (verificationCode) {
+    return bcrypt.compare(verificationCode, this.verification);
 };
 
 const User = mongoose.model('User', userSchema);
