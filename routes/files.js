@@ -7,6 +7,12 @@ const {authenticate} = require("../middlewares/auth");
 
 router.get('/:filename', (req, res) => {
     const filename = path.basename(req.params.filename);
+
+    if (!isValidFilename(filename)) {
+        console.error("Invalid filename");
+        return res.status(400).send('Bad Request. Invalid filename');
+    }
+
     const filePath = path.join(__dirname, '../uploads', filename);
 
     fs.access(filePath, fs.constants.F_OK, (err) => {
@@ -35,3 +41,8 @@ router.get('/image/:id', authenticate,  async (req, res) => {
 });
 
 module.exports = router;
+
+function isValidFilename(filename) {
+    const regex = /^[a-zA-Z0-9_-]+$/;
+    return !filename.includes("..") && regex.test(filename);
+}
