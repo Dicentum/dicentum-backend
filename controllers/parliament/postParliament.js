@@ -8,7 +8,7 @@ const postParliament = async function (req, res){
         const description = req.body.description.toString();
         const location = req.body.location.toString();
         const totalSeats = parseInt(req.body.totalSeats);
-        const admin = req.body.admin;
+        const admin = req.body.admin.toString();
         const parliamentaryGroups = req.body.parliamentaryGroups.split(',');
 
         const adminUser = await User.findById(admin);

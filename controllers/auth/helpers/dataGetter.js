@@ -1,4 +1,3 @@
-const User = require('../../../models/users');
 const Passkey = require("../../../models/passkey");
 
 const getUserPasskeys = async (user) => {
@@ -11,7 +10,7 @@ const getUserPasskeys = async (user) => {
 };
 const getUserPasskey = async (user, passkeyId) => {
     try {
-        const passkey = await Passkey.findOne({user: user.id, credentialID: passkeyId});
+        const passkey = await Passkey.findOne({user: user.id.toString(), credentialID: passkeyId.toString()});
         return passkey;
     } catch (error) {
         console.error(error.message);
