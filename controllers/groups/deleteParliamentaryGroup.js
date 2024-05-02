@@ -36,7 +36,7 @@ const deleteParliamentaryGroup = async function (req, res){
             }
         }
 
-        await group.remove();
+        await parliamentaryGroup.deleteOne({ _id: req.params.id });
         return res.status(204).json({ message: 'Parliamentary group deleted' });
     } catch (error) {
         console.error(error);

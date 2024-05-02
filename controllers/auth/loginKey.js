@@ -53,8 +53,6 @@ const loginKeyFinish = async (req, res) => {
             },
         };
         verification = await verifyAuthenticationResponse(options);
-        console.log("VERIFICATION");
-        console.log(verification); // Add this line
 
         const {verified, authenticationInfo} = verification;
         if(verified){
@@ -64,6 +62,8 @@ const loginKeyFinish = async (req, res) => {
             await user.save();
             return res.status(200).json({message: 'Successfully authenticated'});
         }
+        user.options = null;
+        await user.save();
         return res.status(400).json({error: 'Failed to authenticate'});
 
     } catch(error) {

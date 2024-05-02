@@ -1,14 +1,30 @@
 const ParliamentaryGroup = require("../../models/parliamentaryGroup");
 const {checkParliamentaryGroupExists, checkUserExists} = require("./validators");
+const Image = require("../../models/image");
 
-const updateParliamentaryGroupDetails = (group, details) => {
+const updateParliamentaryGroupDetails = async (group, details, file) => {
     if ('name' in details) group.name = details.name;
     if ('description' in details) group.description = details.description;
     if ('color' in details) group.color = details.color;
-    if ('logo' in details) group.logo = details.logo;
     if ('seats' in details) group.seats = details.seats;
-    if ('users' in details) group.users = details.users;
-    if ('requestedUsers' in details) group.requestedUsers = details.requestedUsers;
+    if ('users' in details && details.users !== "") group.users = details.users;
+    if ('requestedUsers' in details && details.requestedUsers !== "") group.requestedUsers = details.requestedUsers;
+
+    if (file) {
+        console.log("THERE IS A FILE");
+        if(file.mimetype == 'image/jpg' || file.mimetype == 'image/png' || file.mimetype == 'image/jpeg') {
+            const image = new Image({
+                filename: file.filename,
+                path: file.path
+            });
+            console.log("IMAGE", image);
+            await image.save();
+            group.logo = image._id;
+            console.log("GROUP", group);
+        } else {
+            throw new Error('Invalid file type');
+        }
+    }
 };
 
 const editParliamentaryGroup = async function (req, res) {
@@ -17,10 +33,16 @@ const editParliamentaryGroup = async function (req, res) {
         const oldUsers = [...group.users];
         const oldRequestedUsers = [...group.requestedUsers];
 
-        updateParliamentaryGroupDetails(group, req.body);
+        console.log(req.body);
+        console.log(req.file);
+        await updateParliamentaryGroupDetails(group, req.body, req.file);
 
         if(Array.isArray(group.users) && group.users.length > group.seats) {
             return res.status(400).json({ message: "Number of users cannot be greater than the number of seats" });
+        }
+
+        if (Array.isArray(group.users)) {
+            req.body.users = [...new Set(req.body.users)];
         }
 
         if(Array.isArray(group.users) && Array.isArray(group.requestedUsers)){

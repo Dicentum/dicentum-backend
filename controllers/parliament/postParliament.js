@@ -9,7 +9,6 @@ const postParliament = async function (req, res){
         const location = req.body.location.toString();
         const totalSeats = parseInt(req.body.totalSeats);
         const admin = req.body.admin.toString();
-        const parliamentaryGroups = req.body.parliamentaryGroups.split(',');
 
         const adminUser = await User.findById(admin);
         if (!adminUser || adminUser.role !== 'admin') {
@@ -22,31 +21,13 @@ const postParliament = async function (req, res){
 
         const newParliament = new Parliament({
             name,
+            description,
             location,
             totalSeats,
             admin,
-            parliamentaryGroups,
         });
-
-        if(parliamentaryGroups){
-            let totalGroupSeats = 0;
-            for (const group of parliamentaryGroups) {
-                const groupId = group.toString();
-                console.log(groupId);
-                const groupExists = await ParliamentaryGroup.findById(groupId);
-                if (groupExists.parliament){
-                    return res.status(400).json({ message: "Parliamentary group already in a parliament" });
-                } else {
-                    groupExists.parliament = newParliament._id;
-                    await groupExists.save();
-                }
-                totalGroupSeats += groupExists.seats;
-            }
-            if (totalGroupSeats > totalSeats) {
-                return res.status(400).json({ message: "Sum of parliamentary group seats cannot be greater than total seats" });
-            }
-        }
-
+        adminUser.isAdminOf = newParliament._id;
+        adminUser.save();
         await newParliament.save();
         return res.status(201).json(newParliament);
     } catch (error) {

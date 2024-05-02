@@ -2,6 +2,7 @@ const ParliamentaryGroup = require('../../models/parliamentaryGroup');
 const User = require("../../models/users");
 const { checkUserExists } = require("./validators");
 const {checkParliamentExists} = require("../parliament/validators/checkParliamentExists");
+const Image = require("../../models/image");
 
 const postParliamentaryGroup = async function (req, res){
     try {
@@ -12,9 +13,7 @@ const postParliamentaryGroup = async function (req, res){
             const description = req.body.description.toString();
             const color = req.body.color.toString();
             let logo = "";
-            if (req.body.logo) {
-                logo = req.body.logo.toString();
-            }
+
             const seats = parseInt(req.body.seats);
             let users = [];
             if (req.body.users) {
@@ -23,16 +22,37 @@ const postParliamentaryGroup = async function (req, res){
             const requestedUsers = [];
             const parliament = req.body.parliament;
 
-            const newGroup = new ParliamentaryGroup({
-                name,
-                description,
-                color,
-                logo,
-                seats,
-                users,
-                requestedUsers,
-                parliament
-            });
+            if (req.file) {
+                if(req.file.mimetype == 'image/jpg' || req.file.mimetype == 'image/png' || req.file.mimetype == 'image/jpeg') {
+                    const image = new Image({
+                        filename: req.file.filename,
+                        path: req.file.path
+                    });
+                    await image.save();
+                    const newGroup = new ParliamentaryGroup({
+                        name,
+                        description,
+                        color,
+                        logo: image._id,
+                        seats,
+                        users,
+                        requestedUsers,
+                        parliament
+                    });
+                } else {
+                    throw new Error('Invalid file type');
+                }
+            } else {
+                const newGroup = new ParliamentaryGroup({
+                    name,
+                    description,
+                    color,
+                    seats,
+                    users,
+                    requestedUsers,
+                    parliament
+                });
+            }
 
             if (seats < 1) {
                 return res.status(400).json({message: "Seats must be a positive number"});
@@ -66,6 +86,17 @@ const postParliamentaryGroup = async function (req, res){
                 }
             }
             const parliamentE = await checkParliamentExists(parliament);
+            if(parliamentE.parliamentaryGroups){
+                let totalGroupSeats = 0;
+                for (const group of parliamentE.parliamentaryGroups) {
+                    const groupId = group.toString();
+                    const groupExists = await ParliamentaryGroup.findById(groupId);
+                    totalGroupSeats += groupExists.seats;
+                }
+                if (totalGroupSeats + seats > parliamentE.totalSeats) {
+                    return res.status(400).json({ message: "Sum of parliamentary group seats cannot be greater than total seats" });
+                }
+            }
             parliamentE.parliamentaryGroups.push(newGroup._id);
 
             await newGroup.save();

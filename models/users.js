@@ -70,6 +70,10 @@ const userSchema = new mongoose.Schema({
         type: [mongoose.Schema.Types.ObjectId],
         ref: 'Passkey'
     },
+    isAdminOf: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Parliament',
+    },
     parliamentaryGroup: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'ParliamentaryGroup'
