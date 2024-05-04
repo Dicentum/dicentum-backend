@@ -1,5 +1,6 @@
 const Parliament = require('../../models/parliament');
 const ParliamentaryGroup = require('../../models/parliamentaryGroup');
+const parliamentaryGroup = require("../../models/parliamentaryGroup");
 
 const deleteParliament = async function (req, res){
     try {
@@ -14,7 +15,7 @@ const deleteParliament = async function (req, res){
             await group.save();
         }
 
-        await parliament.remove();
+        await parliament.deleteOne({ _id: parliament._id });
         return res.status(204).json({ message: 'Parliament deleted' });
     } catch (error) {
         console.error(error);

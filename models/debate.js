@@ -24,6 +24,15 @@ const debateSchema = new mongoose.Schema({
     endDateVote: {
         type: Date,
     },
+    type: {
+        type: String,
+        enum: ['online', 'presential'],
+        default: 'online'
+    },
+    timers: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'DebateTimer'
+    }],
     userVotes: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'userVotes'

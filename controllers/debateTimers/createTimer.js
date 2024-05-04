@@ -1,0 +1,45 @@
+const DebateTimer = require('../../models/debateTimer');
+const {checkDebateExists} = require("../debates/validators/checkDebateExists");
+
+const createTimer = async function (req, res){
+    try {
+        const content = req.body.content.toString();
+        const start = req.body.start.toString();
+        const end = req.body.end.toString();
+        const debate = req.body.debate.toString();
+
+        const debateExists = await checkDebateExists(debate);
+
+        if (!debateExists) {
+            return res.status(400).json({ message: "Debate does not exist" });
+        }
+
+        if(end < start){
+            return res.status(400).json({ message: "End date must be greater than start date" });
+        }
+        if(start < new Date()){
+            return res.status(400).json({ message: "Start date must be equal or greater than current date" });
+        }
+
+        if(debateExists.isClosed){
+            return res.status(400).json({ message: "Debate is closed" });
+        }
+
+        const newTimer = new DebateTimer({
+            content,
+            start,
+            end,
+            debate
+        });
+
+        await newTimer.save();
+        debateExists.timers.push(newTimer._id);
+        debateExists.save();
+        res.status(201).json(newTimer);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal Error: "+error });
+    }
+}
+
+module.exports = {createTimer};

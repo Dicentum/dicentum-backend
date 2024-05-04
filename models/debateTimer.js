@@ -1,10 +1,6 @@
 const mongoose = require("mongoose");
 
-const messageTimerSchema = new mongoose.Schema({
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    },
+const debateTimerSchema = new mongoose.Schema({
     content: {
         type: String,
         required: true,
@@ -24,6 +20,6 @@ const messageTimerSchema = new mongoose.Schema({
     }
 });
 
-const MessageTimer = mongoose.model('MessageTimer', messageTimerSchema);
+const DebateTimer = mongoose.model('DebateTimer', debateTimerSchema);
 
-module.exports = MessageTimer;
+module.exports = DebateTimer;
