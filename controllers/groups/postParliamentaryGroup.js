@@ -6,7 +6,6 @@ const Image = require("../../models/image");
 
 const postParliamentaryGroup = async function (req, res){
     try {
-        console.log(req);
         if (req.body.name && req.body.description && req.body.color && req.body.seats && req.body.parliament) {
 
             const name = req.body.name.toString();

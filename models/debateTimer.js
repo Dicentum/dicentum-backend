@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const debateTimerSchema = new mongoose.Schema({
     content: {
         type: String,
-        required: true,
+        required: false,
         trim: true
     },
     start:{
@@ -12,6 +12,11 @@ const debateTimerSchema = new mongoose.Schema({
     },
     end:{
         type: Date,
+        required: true
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     },
     debate: {

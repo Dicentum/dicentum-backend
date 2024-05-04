@@ -1,4 +1,4 @@
-import DebateTimer from "../../../models/debateTimer";
+const DebateTimer = require('../../../models/debateTimer');
 
 const checkTimerExists = async function (id) {
     try {

@@ -1,17 +1,23 @@
 const DebateTimer = require('../../models/debateTimer');
 const {checkDebateExists} = require("../debates/validators/checkDebateExists");
+const {checkUserExists} = require("../groups/validators");
 
 const createTimer = async function (req, res){
     try {
-        const content = req.body.content.toString();
+        const content = req.body.content ? req.body.content.toString() : "";
         const start = req.body.start.toString();
         const end = req.body.end.toString();
         const debate = req.body.debate.toString();
+        const user = req.user._id;
 
         const debateExists = await checkDebateExists(debate);
+        const userExists = await checkUserExists(user);
 
         if (!debateExists) {
             return res.status(400).json({ message: "Debate does not exist" });
+        }
+        if(!userExists){
+            return res.status(400).json({ message: "User does not exist" });
         }
 
         if(end < start){
@@ -29,7 +35,8 @@ const createTimer = async function (req, res){
             content,
             start,
             end,
-            debate
+            debate,
+            user: userExists._id
         });
 
         await newTimer.save();

@@ -1,5 +1,5 @@
-import {checkTimerExists} from "./validators/checkTimerExists";
-import Debate from "../../models/debate";
+const {checkTimerExists } = require("./validators/checkTimerExists");
+const Debate = require('../../models/debate');
 
 const deleteTimer = async function (req, res){
     try {
