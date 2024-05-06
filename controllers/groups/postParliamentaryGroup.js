@@ -21,28 +21,35 @@ const postParliamentaryGroup = async function (req, res){
             const requestedUsers = [];
             const parliament = req.body.parliament;
 
+            let newGroup;
+
             if (req.file) {
+                console.log("TEHRE IS A FILE");
+                console.log(req.file);
                 if(req.file.mimetype == 'image/jpg' || req.file.mimetype == 'image/png' || req.file.mimetype == 'image/jpeg') {
                     const image = new Image({
                         filename: req.file.filename,
                         path: req.file.path
                     });
+                    console.log("IMAGE", image);
                     await image.save();
-                    const newGroup = new ParliamentaryGroup({
+                    logo = image._id;
+                    newGroup = new ParliamentaryGroup({
                         name,
                         description,
                         color,
-                        logo: image._id,
+                        logo,
                         seats,
                         users,
                         requestedUsers,
                         parliament
                     });
+                    console.log("GROUP", newGroup);
                 } else {
                     throw new Error('Invalid file type');
                 }
             } else {
-                const newGroup = new ParliamentaryGroup({
+                newGroup = new ParliamentaryGroup({
                     name,
                     description,
                     color,

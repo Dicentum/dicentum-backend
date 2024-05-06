@@ -11,7 +11,6 @@ const updateParliamentaryGroupDetails = async (group, details, file) => {
     if ('requestedUsers' in details && details.requestedUsers !== "") group.requestedUsers = details.requestedUsers;
 
     if (file) {
-        console.log("THERE IS A FILE");
         if(file.mimetype == 'image/jpg' || file.mimetype == 'image/png' || file.mimetype == 'image/jpeg') {
             const image = new Image({
                 filename: file.filename,
