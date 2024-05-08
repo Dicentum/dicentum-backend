@@ -134,3 +134,4 @@ uploads
 
 #Certificates content
 certificates/private_key.pem
+certificates/public_key.pem
