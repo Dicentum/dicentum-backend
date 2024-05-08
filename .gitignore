@@ -131,3 +131,6 @@ dist
 
 # Uploads
 uploads
+
+#Certificates content
+certificates/private_key.pem
