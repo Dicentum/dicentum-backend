@@ -21,18 +21,18 @@ const createSecureVote = async (req, res) => {
     const voteBody = req.decryptedVote;
 
     const currentOptions = user.options;
-    const passkey = await getUserPasskey(user, body.id);
-    if (!passkey) {
+    const passkeyRetrieved = await getUserPasskey(user, body.id);
+    if (!passkeyRetrieved) {
         return res.status(400).json({error: 'Passkey not found for the user'});
     }
 
-    if(voteBody[0] !== passkey.credentialID){
+    if(voteBody[0] !== passkeyRetrieved.credentialID){
         return res.status(400).json({error: 'Invalid vote'});
     }
 
-    let verification;
+    let verificationResponse;
 
-    const publicKeyBuffer = Buffer.from(passkey.publicKey.read(0, passkey.publicKey.length()));
+    const publicKeyBuffer = Buffer.from(passkeyRetrieved.publicKey.read(0, passkeyRetrieved.publicKey.length()));
     const publicKeyUint8Array = new Uint8Array(publicKeyBuffer);
 
     try{
@@ -43,19 +43,19 @@ const createSecureVote = async (req, res) => {
             expectedRPID: rpID,
             requireUserVerification: true,
             authenticator: {
-                credentialID: passkey.credentialID,
+                credentialID: passkeyRetrieved.credentialID,
                 credentialPublicKey: publicKeyUint8Array,
-                counter: passkey.counter,
-                transports: passkey.transports,
+                counter: passkeyRetrieved.counter,
+                transports: passkeyRetrieved.transports,
             },
         };
-        verification = await verifyAuthenticationResponse(options);
+        verificationResponse = await verifyAuthenticationResponse(options);
 
-        const {verified, authenticationInfo} = verification;
-        if(verified){
-            passkey.counter = authenticationInfo.newCounter;
+        const {verifiedPass, auth} = verificationResponse;
+        if(verifiedPass){
+            passkeyRetrieved.counter = auth.newCounter;
             user.options = null;
-            await passkey.save();
+            await passkeyRetrieved.save();
             await user.save();
             const voteCreated = await createVote(user._id, req.params.id, voteBody, res);
             if (!voteCreated) return res.status(400).json({ message: "Failed to create vote" });
@@ -81,7 +81,7 @@ const createVote = async (userId, debateId, body, res) => {
         const user = userId;
         const vote = body;
 
-        const now = Date.now();
+        const thisTime = Date.now();
 
         if(!debate) return res.status(404).json({ message: "Debate not found" });
 
@@ -97,8 +97,8 @@ const createVote = async (userId, debateId, body, res) => {
 
 
         if(debate.isClosed) return res.status(400).json({ message: "Debate is closed" });
-        if (now < debate.startDateVote) return res.status(400).json({ message: "Voting has not started yet" });
-        if (now > debate.endDateVote) return res.status(400).json({ message: "Voting has ended" });
+        if (thisTime < debate.startDateVote) return res.status(400).json({ message: "Voting has not started yet" });
+        if (thisTime > debate.endDateVote) return res.status(400).json({ message: "Voting has ended" });
 
         const cleanVote = vote[1]
 
