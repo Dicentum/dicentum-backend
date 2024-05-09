@@ -1,5 +1,5 @@
 const express = require('express');
-const { register, login, validate, registerKeyStart, registerKeyFinish, loginKeyStart, loginKeyFinish } = require('../controllers/auth');
+const { register, login, validate, registerKeyStart, registerKeyFinish, loginKeyStart, loginKeyFinish, getPublicKey} = require('../controllers/auth');
 const { authenticate } = require("../middlewares/auth");
 
 const router = express.Router();
@@ -26,6 +26,11 @@ router.get('/loginKey/start',
 router.post('/loginKey/finish',
     authenticate,
     loginKeyFinish
+);
+
+router.get('/publicKey',
+    authenticate,
+    getPublicKey
 );
 
 router.get('/', authenticate, (req, res) => {

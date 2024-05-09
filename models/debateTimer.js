@@ -1,13 +1,9 @@
 const mongoose = require("mongoose");
 
-const messageTimerSchema = new mongoose.Schema({
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    },
+const debateTimerSchema = new mongoose.Schema({
     content: {
         type: String,
-        required: true,
+        required: false,
         trim: true
     },
     start:{
@@ -18,12 +14,17 @@ const messageTimerSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
     debate: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Debate'
     }
 });
 
-const MessageTimer = mongoose.model('MessageTimer', messageTimerSchema);
+const DebateTimer = mongoose.model('DebateTimer', debateTimerSchema);
 
-module.exports = MessageTimer;
+module.exports = DebateTimer;

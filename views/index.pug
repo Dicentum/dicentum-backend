@@ -10,7 +10,7 @@ block content
     div.auth
       a(href='/auth') /auth
       ul
-        li GET (Requires a token)
+        li GET
 
     div.authregister
       a(href='/auth/register') /auth/register
@@ -28,7 +28,7 @@ block content
         li GET
       a(href='/users/:id') /users/:id
       ul
-        li GET (Requires a token)
+        li GET
 
     div.groups
       a(href='/groups') /groups
@@ -58,6 +58,24 @@ block content
       a(href='/debates/:id') /debates/:id
       ul
         li PUT
+        li DELETE
+      a(href='/debates/:id/vote/secure') /debates/:id/vote/secure
+      ul
+        li POST
+      a(href='/debates/:id/tally') /debates/:id/tally
+      ul
+        li GET (Only admin)
+      a(href='/debates/:id/result') /debates/:id/result
+      ul
+        li GET
+
+    div.timers
+      a(href='/timers') /timers
+      ul
+        li POST
+      a(href='/timers/:id') /timers/:id
+      ul
+        li GET
         li DELETE
 
     div.image

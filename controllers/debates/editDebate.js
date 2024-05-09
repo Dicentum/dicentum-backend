@@ -1,4 +1,5 @@
 const {Debate} = require('../../models/debate');
+const {checkDebateExists} = require("./validators/checkDebateExists");
 
 const updateDebateDetails = (debate, details) => {
     if ('title' in details) debate.title = details.title;
@@ -7,11 +8,13 @@ const updateDebateDetails = (debate, details) => {
     if ('isClosed' in details) debate.isClosed = details.isClosed;
     if ('startDateVote' in details) debate.startDateVote = details.startDateVote;
     if ('endDateVote' in details) debate.endDateVote = details.endDateVote;
+    if('type' in details) debate.type = details.type;
+    if('votingDescription' in details) debate.votingDescription = details.votingDescription;
 };
 
 const editDebate = async function (req, res) {
     try {
-        const debate = await Debate.findById(req.params.id.toString());
+        const debate = await checkDebateExists(req.params.id);
 
         if (!debate) {
             return res.status(400).json({ message: "Debate not found" });

@@ -8,25 +8,54 @@ const postDebate = async function (req, res){
         const date = req.body.date.toString();
         const isClosed = req.body.isClosed.toString();
         const parliament = req.body.parliament.toString();
+        let type = req.body.type.toString();
+        const votingDescription = req.body.votingDescription.toString();
 
         const parliamentExists = await checkParliamentExists(parliament);
         if (!parliamentExists) {
             return res.status(400).json({ message: "Parliament does not exist" });
         }
-        const startDateVote = req.body.startDateVote.toString();
-        const endDateVote = req.body.endDateVote.toString();
 
-        const newDebate = new Debate({
-            title,
-            description,
-            date,
-            isClosed,
-            parliament,
-            startDateVote,
-            endDateVote
-        });
+        if(type != "online" && type != "presential"){
+            type = "online";
+        }
+
+        let newDebate;
+        if(isClosed == "true"){
+            newDebate = new Debate({
+                title,
+                description,
+                date,
+                isClosed,
+                parliament,
+                type,
+                votingDescription
+            });
+        } else {
+            const startDateVote = req.body.startDateVote.toString();
+            const endDateVote = req.body.endDateVote.toString();
+
+            if(endDateVote < startDateVote){
+                return res.status(400).json({ message: "End date vote must be greater than start date vote" });
+            }
+
+            newDebate = new Debate({
+                title,
+                description,
+                date,
+                isClosed,
+                parliament,
+                startDateVote,
+                endDateVote,
+                type,
+                votingDescription
+            });
+        }
+
+        parliamentExists.debates.push(newDebate._id);
 
         await newDebate.save();
+        await parliamentExists.save();
 
         res.status(201).json(newDebate);
     } catch (error) {

@@ -5,6 +5,7 @@ const groupsRouter = require('./groups');
 const parliamentRouter = require('./parliament');
 const debatesRouter = require('./debates');
 const filesRouter = require('./files');
+const debateTimers = require('./debateTimer');
 
 const setupRoutes = (app) => {
     app.use('/', indexRouter);
@@ -14,6 +15,7 @@ const setupRoutes = (app) => {
     app.use('/parliaments', parliamentRouter);
     app.use('/debates', debatesRouter);
     app.use('/files', filesRouter);
+    app.use('/timers', debateTimers)
 };
 
 module.exports = { setupRoutes };

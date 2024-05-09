@@ -43,6 +43,6 @@ router.get('/image/:id', authenticate,  async (req, res) => {
 module.exports = router;
 
 function isValidFilename(filename) {
-    const regex = /^[a-zA-Z0-9_-]+$/;
+    const regex = /^[a-zA-Z0-9_.-]+$/;
     return !filename.includes("..") && regex.test(filename);
 }

@@ -6,6 +6,7 @@ const {getParliamentaryGroups, postParliamentaryGroup, editParliamentaryGroup, g
 const {validateUsersPerSeats} = require("../middlewares/group");
 const {checkCast, validId} = require("../middlewares/utils");
 const {checkUserRole} = require("../middlewares/user/checkUserRole");
+const upload = require("../utils/multer");
 
 /* GET users listing. */
 router.get('/',
@@ -13,6 +14,7 @@ router.get('/',
 );
 
 router.post('/',
+    upload.single('file'),
     validateUsersPerSeats,
     postParliamentaryGroup
 );
@@ -24,6 +26,7 @@ router.get('/:id',
 );
 
 router.put('/:id',
+    upload.single('file'),
     checkCast,
     validateUsersPerSeats,
     editParliamentaryGroup
@@ -39,10 +42,10 @@ router.delete('/request/:id/:user',
     deleteRequestParliamentaryGroup
 );
 
-router.post('/approve/:id/:user',
+router.post('/approve/:id/:userId',
     checkCast,
     checkUserRole('admin'),
-            approveRequestParliamentaryGroup
+    approveRequestParliamentaryGroup
 );
 
 router.delete('/:id',

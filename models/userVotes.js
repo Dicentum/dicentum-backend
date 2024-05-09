@@ -5,10 +5,12 @@ const UserVotesSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
+    debate: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Debate'
+    },
     vote: {
         type: String,
-        enum: ['yes', 'no', 'abstain', 'not present'],
-        default: 'not present',
         required: true
     },
 });

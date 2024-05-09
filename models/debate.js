@@ -10,6 +10,11 @@ const debateSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    votingDescription: {
+        type: String,
+        default: 'Without voting description',
+        required: true
+    },
     date: {
         type: Date,
         required: true
@@ -24,10 +29,19 @@ const debateSchema = new mongoose.Schema({
     endDateVote: {
         type: Date,
     },
-    userVotes: [{
+    type: {
+        type: String,
+        enum: ['online', 'presential'],
+        default: 'online'
+    },
+    timers: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'userVotes'
+        ref: 'DebateTimer'
     }],
+    debateResult: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'DebateResult'
+    },
     parliament: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Parliament'
