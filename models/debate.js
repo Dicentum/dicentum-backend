@@ -10,6 +10,11 @@ const debateSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    votingDescription: {
+        type: String,
+        default: 'Without voting description',
+        required: true
+    },
     date: {
         type: Date,
         required: true
@@ -33,10 +38,10 @@ const debateSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'DebateTimer'
     }],
-    userVotes: [{
+    debateResult: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'userVotes'
-    }],
+        ref: 'DebateResult'
+    },
     parliament: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Parliament'

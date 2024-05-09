@@ -8,7 +8,7 @@ const createTimer = async function (req, res){
         const start = req.body.start.toString();
         const end = req.body.end.toString();
         const debate = req.body.debate.toString();
-        const user = req.user._id;
+        const user = req.body.user.toString();
 
         const debateExists = await checkDebateExists(debate);
         const userExists = await checkUserExists(user);

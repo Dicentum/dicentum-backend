@@ -5,7 +5,7 @@ const {getUserPasskeys, getUserPasskey} = require("./helpers/dataGetter");
 
 const rpID = RP_ID_PASSKEY;
 const rpName = 'Dicentum App';
-const expectedOrigin = 'http://localhost:5173';
+const expectedOrigin = ORIGIN;
 
 const loginKeyStart = async (req, res) => {
     const user = req.user;

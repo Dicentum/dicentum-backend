@@ -9,6 +9,7 @@ const postDebate = async function (req, res){
         const isClosed = req.body.isClosed.toString();
         const parliament = req.body.parliament.toString();
         let type = req.body.type.toString();
+        const votingDescription = req.body.votingDescription.toString();
 
         const parliamentExists = await checkParliamentExists(parliament);
         if (!parliamentExists) {
@@ -27,7 +28,8 @@ const postDebate = async function (req, res){
                 date,
                 isClosed,
                 parliament,
-                type
+                type,
+                votingDescription
             });
         } else {
             const startDateVote = req.body.startDateVote.toString();
@@ -45,7 +47,8 @@ const postDebate = async function (req, res){
                 parliament,
                 startDateVote,
                 endDateVote,
-                type
+                type,
+                votingDescription
             });
         }
 

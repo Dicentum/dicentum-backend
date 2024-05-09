@@ -11,6 +11,11 @@ async function createUniqueUsername(name, surname) {
         counter++;
     }
 
+    let randomNum1 = Math.floor(Math.random() * 10);
+    let randomNum2 = Math.floor(Math.random() * 10);
+
+    username = username + randomNum1.toString() + randomNum2.toString();
+
     return username;
 }
 

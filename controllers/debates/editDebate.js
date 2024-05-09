@@ -9,6 +9,7 @@ const updateDebateDetails = (debate, details) => {
     if ('startDateVote' in details) debate.startDateVote = details.startDateVote;
     if ('endDateVote' in details) debate.endDateVote = details.endDateVote;
     if('type' in details) debate.type = details.type;
+    if('votingDescription' in details) debate.votingDescription = details.votingDescription;
 };
 
 const editDebate = async function (req, res) {

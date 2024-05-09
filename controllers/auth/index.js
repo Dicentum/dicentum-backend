@@ -3,6 +3,7 @@ const { register } = require('./register')
 const {validate} = require("./validate");
 const {registerKeyStart, registerKeyFinish} = require("./registerKey");
 const {loginKeyStart, loginKeyFinish} = require("./loginKey");
+const {getPublicKey} = require("./publicKey");
 
 module.exports = {
     login,
@@ -13,4 +14,6 @@ module.exports = {
     registerKeyFinish,
     loginKeyStart,
     loginKeyFinish,
+
+    getPublicKey
 }
