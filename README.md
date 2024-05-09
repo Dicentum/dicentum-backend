@@ -24,8 +24,7 @@ TRANSPORTER_EMAIL_PORT=587 #Email port for the transporter
 ```
 ### Generate a RSA key in the certificates folder
 For that you can use:
-https://travistidwell.com/jsencrypt/demo/
-  - [[JSEncrypt](https://travistidwell.com/jsencrypt/demo/)]
+  - [JSEncrypt](https://travistidwell.com/jsencrypt/demo/)
   - OpenSSL rsa command (Unix only)
 
 ## Usage
