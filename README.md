@@ -21,6 +21,8 @@ TRANSPORTER_EMAIL_USER='' #Email for the transporter
 TRANSPORTER_EMAIL_PASS='' #Password for the transporter
 TRANSPORTER_EMAIL_HOST='' #Email host for the transporter
 TRANSPORTER_EMAIL_PORT=587 #Email port for the transporter
+RP_ID_PASSKEY # Where your server is running (without port neither protocol)
+ENABLE_HTTPS #True or false
 ```
 ### Generate a RSA key in the certificates folder
 For that you can use:
