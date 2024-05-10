@@ -24,7 +24,7 @@ setupSession(app);
 //Mongoose connection
 mongoose.connect(config.MONGODB_URI, {})
     .then(() => {
-      printer.info('Connection to MongoDB Atlas completed!');
+      printer.info('Connection to MongoDB completed!');
     })
     .catch((err) => {
       printer.error('Connection error to MongoDB Atlas:', err);
