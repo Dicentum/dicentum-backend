@@ -7,10 +7,6 @@ WORKDIR /usr/src/app
 
 RUN useradd -m dicentumuser
 
-RUN mkdir certificates
-RUN openssl genrsa -out certificates/private_key.pem 1024
-RUN openssl rsa -in certificates/private.pem -pubout -out certificates/public_key.pem
-
 COPY package*.json ./
 
 # Copy only necessary files or directories
@@ -24,6 +20,7 @@ COPY ./utils ./utils
 COPY ./views ./views
 COPY ./uploads ./uploads
 COPY ./app.js ./app.js
+COPY ./entrypoint.sh ./entrypoint.sh
 
 # Change ownership to dicentumuser
 RUN chown -R dicentumuser:dicentumuser /usr/src/app
@@ -34,8 +31,11 @@ USER dicentumuser
 # Install dependencies
 RUN npm install
 
+# Make the entrypoint script executable
+RUN chmod +x ./entrypoint.sh
+
 # Expose port 3000 (or any other port your Express app uses)
 EXPOSE 3000
 
-# Command to run the application
-CMD [ "npm", "start" ]
+# Set the entrypoint script as the command to run
+ENTRYPOINT [ "./entrypoint.sh" ]
