@@ -1,6 +1,6 @@
 {
   "name": "dicentum-backend",
-  "version": "1.0.3",
+  "version": "1.0.7",
   "private": true,
   "scripts": {
     "start": "node bin/index",
