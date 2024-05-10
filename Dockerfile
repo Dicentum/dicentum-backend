@@ -1,5 +1,5 @@
 # Use the official Node.js 18.14.2 image
-FROM node:18.14.2-alpine
+FROM node:21-alpine
 
 # Install shadow package
 RUN apk --no-cache add shadow
