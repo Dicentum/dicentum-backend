@@ -7,8 +7,18 @@ const updateParliamentaryGroupDetails = async (group, details, file) => {
     if ('description' in details) group.description = details.description;
     if ('color' in details) group.color = details.color;
     if ('seats' in details) group.seats = details.seats;
-    if ('users' in details && details.users !== "") group.users = details.users;
-    if ('requestedUsers' in details && details.requestedUsers !== "") group.requestedUsers = details.requestedUsers;
+    if ('users' in details && details.users !== ""){
+        if(typeof details.users === 'string') {
+            details.users = details.users.split(',').map(id => id.trim());
+        }
+        group.users = details.users;
+    }
+    if ('requestedUsers' in details && details.requestedUsers !== ""){
+        if(typeof details.requestedUsers === 'string') {
+            details.requestedUsers = details.requestedUsers.split(',').map(id => id.trim());
+        }
+        group.requestedUsers = details.requestedUsers;
+    }
 
     if (file) {
         if(file.mimetype == 'image/jpg' || file.mimetype == 'image/png' || file.mimetype == 'image/jpeg') {
