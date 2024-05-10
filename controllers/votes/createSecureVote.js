@@ -1,11 +1,12 @@
+const Passkey = require("../../models/passkey");
+const {RP_ID_PASSKEY, ORIGIN} = require("../../utils/config");
+const {  verifyAuthenticationResponse } = require('@simplewebauthn/server');
+const { getUserPasskey} = require("../auth/helpers/dataGetter");
 const {checkDebateExists} = require("../debates/validators/checkDebateExists");
 const userVotes = require("../../models/userVotes");
 const User = require("../../models/users");
 const ParliamentaryGroup = require("../../models/parliamentaryGroup");
 const Parliament = require("../../models/parliament");
-const {RP_ID_PASSKEY, ORIGIN} = require("../../utils/config");
-const {getUserPasskeys, getUserPasskey} = require("../auth/helpers/dataGetter");
-const {generateAuthenticationOptions, verifyAuthenticationResponse} = require("@simplewebauthn/server");
 const fs = require("fs");
 const JSEncrypt = require("node-jsencrypt");
 
@@ -21,18 +22,18 @@ const createSecureVote = async (req, res) => {
     const voteBody = req.decryptedVote;
 
     const currentOptions = user.options;
-    const passkeyRetrieved = await getUserPasskey(user, body.id);
-    if (!passkeyRetrieved) {
+    const passkey = await getUserPasskey(user, body.id);
+    if (!passkey) {
         return res.status(400).json({error: 'Passkey not found for the user'});
     }
 
-    if(voteBody[0] !== passkeyRetrieved.credentialID){
+    if(voteBody[0] !== passkey.credentialID){
         return res.status(400).json({error: 'Invalid vote'});
     }
 
-    let verificationResponse;
+    let verification;
 
-    const publicKeyBuffer = Buffer.from(passkeyRetrieved.publicKey.read(0, passkeyRetrieved.publicKey.length()));
+    const publicKeyBuffer = Buffer.from(passkey.publicKey.read(0, passkey.publicKey.length()));
     const publicKeyUint8Array = new Uint8Array(publicKeyBuffer);
 
     try{
@@ -43,23 +44,24 @@ const createSecureVote = async (req, res) => {
             expectedRPID: rpID,
             requireUserVerification: true,
             authenticator: {
-                credentialID: passkeyRetrieved.credentialID,
+                credentialID: passkey.credentialID,
                 credentialPublicKey: publicKeyUint8Array,
-                counter: passkeyRetrieved.counter,
-                transports: passkeyRetrieved.transports,
+                counter: passkey.counter,
+                transports: passkey.transports,
             },
         };
-        verificationResponse = await verifyAuthenticationResponse(options);
+        verification = await verifyAuthenticationResponse(options);
 
-        const {verifiedPass, auth} = verificationResponse;
-        if(verifiedPass){
-            passkeyRetrieved.counter = auth.newCounter;
+        const {verified, authenticationInfo} = verification;
+        if(verified){
+            passkey.counter = authenticationInfo.newCounter;
             user.options = null;
-            await passkeyRetrieved.save();
+            await passkey.save();
             await user.save();
             const voteCreated = await createVote(user._id, req.params.id, voteBody, res);
             if (!voteCreated) return res.status(400).json({ message: "Failed to create vote" });
             else return res.status(201).json(voteCreated);
+
         }
         user.options = null;
         await user.save();
