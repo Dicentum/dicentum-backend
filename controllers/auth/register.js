@@ -6,17 +6,25 @@ const { sendEmail, welcomeSubject, welcomeText } = require('../emailer/index');
 
 const register = async (req, res, next) => {
     try {
-        if (req.body.password === undefined || req.body.name === undefined || req.body.surname === undefined || req.body.email === undefined) {
-            return res.status(400).json({ message: 'E1 Name, surname, email, and password are required' });
+        if (req.body.name === undefined) {
+            return res.status(400).json({ message: 'E1 Name are required' });
         }
-
+        if(req.body.surname === undefined){
+            return res.status(400).json({ message: 'E2 Surname are required' });
+        }
+        if(req.body.email === undefined){
+            return res.status(400).json({ message: 'E3 Email are required' });
+        }
+        if(req.body.password === undefined){
+            return res.status(400).json({ message: 'E4 Password are required' });
+        }
         const password = req.body.password.toString();
         const name = req.body.name.toString();
         const surname = req.body.surname.toString();
         const email = req.body.email.toString();
 
         if (!email || !password || !name || !surname) {
-            return res.status(400).json({ message: 'E2 Name, surname, email, and password are required' });
+            return res.status(400).json({ message: 'E5 Name, surname, email, and password are required' });
         }
 
         if (name.length < 3 || surname.length < 3) {
