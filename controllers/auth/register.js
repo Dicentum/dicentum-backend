@@ -43,12 +43,13 @@ const register = async (req, res, next) => {
             return res.status(400).json({ message: 'Email is already taken' });
         }
 
-        const user = new User({ username: username, name: name, surname:surname, email: email, password: password, verification: verification });
-        await sendEmail(email, welcomeSubject, welcomeText(user.name, user.username, user._id, verification));
+        const user = new User({ username: username, name: name, surname:surname, email: email, password: password, verification: verification }); 
         await user.save();
+        await sendEmail(email, welcomeSubject, welcomeText(user.name, user.username, user._id, verification));
         res.json({ message: 'Registration successful' , id: user._id})
     } catch (error) {
-        next(error);
+        console.error('Error in registration:', error);
+        return res.status(500).json({ message: 'Internal server error' });
     }
 };
 
