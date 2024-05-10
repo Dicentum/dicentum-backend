@@ -9,7 +9,7 @@ RUN useradd -m dicentumuser
 
 RUN mkdir certificates
 RUN openssl genrsa -out certificates/private_key.pem 1024
-RUN openssl rsa -in certificates/private.pem -pubout -out certificates/public_key.pem
+RUN openssl rsa -in certificates/private_key.pem -pubout -out certificates/public_key.pem
 
 COPY package*.json ./
 
