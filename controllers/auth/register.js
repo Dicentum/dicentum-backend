@@ -44,7 +44,7 @@ const register = async (req, res, next) => {
         }
 
         const user = new User({ username: username, name: name, surname:surname, email: email, password: password, verification: verification });
-        await sendEmail(email, welcomeSubject, welcomeText(user.name, user.username, user._id, user.verification));
+        await sendEmail(email, welcomeSubject, welcomeText(user.name, user.username, user._id, verification));
         await user.save();
         res.json({ message: 'Registration successful' , id: user._id})
     } catch (error) {
