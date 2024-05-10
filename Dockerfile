@@ -1,16 +1,16 @@
-# Use the official Node.js 18.14.2 image
+# Use the official Node.js image
 FROM node:21-alpine
 
-# Install shadow package
-RUN apk --no-cache add shadow
+RUN apk --no-cache add shadow openssl
 
-# Create app directory
 WORKDIR /usr/src/app
 
-# Create a new user and switch to that user
 RUN useradd -m dicentumuser
 
-# Copy package.json and package-lock.json
+RUN mkdir certificates
+RUN openssl genrsa -out certificates/private_key.pem 1024
+RUN openssl rsa -in certificates/private.pem -pubout -out certificates/public_key.pem
+
 COPY package*.json ./
 
 # Copy only necessary files or directories
@@ -22,6 +22,7 @@ COPY ./public ./public
 COPY ./routes ./routes
 COPY ./utils ./utils
 COPY ./views ./views
+COPY ./uploads ./uploads
 COPY ./app.js ./app.js
 
 # Change ownership to dicentumuser
