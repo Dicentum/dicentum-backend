@@ -43,9 +43,9 @@ const register = async (req, res, next) => {
             return res.status(400).json({ message: 'Email is already taken' });
         }
 
-        const user = new User({ username: username, name: name, surname:surname, email: email, password: password, verification: verification });
+        const user = new User({ username: username, name: name, surname:surname, email: email, password: password, verification: verification }); 
         await user.save();
-        await sendEmail(email, welcomeSubject, welcomeText(user.name, user.username, user._id, user.verification));
+        await sendEmail(email, welcomeSubject, welcomeText(user.name, user.username, user._id, verification));
         res.json({ message: 'Registration successful' , id: user._id})
     } catch (error) {
         console.error('Error in registration:', error);
