@@ -1,6 +1,7 @@
 const ParliamentaryGroup = require("../../models/parliamentaryGroup");
 const {checkParliamentaryGroupExists, checkUserExists} = require("./validators");
 const Image = require("../../models/image");
+const Parliament = require("../../models/parliament");
 
 const updateParliamentaryGroupDetails = async (group, details, file) => {
     if ('name' in details) group.name = details.name;
@@ -46,8 +47,26 @@ const editParliamentaryGroup = async function (req, res) {
         console.log(req.file);
         await updateParliamentaryGroupDetails(group, req.body, req.file);
 
-        if(Array.isArray(group.users) && group.users.length > group.seats) {
-            return res.status(400).json({ message: "Number of users cannot be greater than the number of seats" });
+        const parliament = await Parliament.findById(group.parliament);
+        if (!parliament) {
+            return res.status(400).json({ message: "Parliament not found" });
+        }
+        const totalSeats = parliament.totalSeats;
+
+        let totalGroupSeats = 0;
+        for (const groupId of parliament.parliamentaryGroups) {
+            if(groupId.toString() == group._id.toString()) {
+                totalGroupSeats += group.seats;
+            } else {
+                const group = await ParliamentaryGroup.findById(groupId.toString());
+                if (!group) {
+                    return res.status(400).json({ message: "Parliamentary group not found" });
+                }
+                totalGroupSeats += group.seats;
+            }
+        }
+        if (totalGroupSeats > totalSeats) {
+            return res.status(400).json({ message: "Sum of parliamentary groups ("+totalGroupSeats.toString()+") seats cannot be greater than total seats ("+totalSeats.toString()+")" });
         }
 
         if (Array.isArray(group.users)) {
