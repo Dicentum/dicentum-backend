@@ -58,15 +58,12 @@ const createSecureVote = async (req, res) => {
             user.options = null;
             await passkey.save();
             await user.save();
-            const voteCreated = await createVote(user._id, req.params.id, voteBody, res);
-            if (!voteCreated) return res.status(400).json({ message: "Failed to create vote" });
-            else return res.status(201).json(voteCreated);
-
+            await createVote(user._id, req.params.id, voteBody, res);
+        } else {
+            user.options = null;
+            await user.save();
+            return res.status(400).json({error: 'Failed to authenticate'});
         }
-        user.options = null;
-        await user.save();
-        return res.status(400).json({error: 'Failed to authenticate'});
-
     } catch(error) {
         console.error('Error during authentication verification:', error);
         return res.status(500).json({error: error.message});
@@ -84,7 +81,6 @@ const createVote = async (userId, debateId, body, res) => {
         const vote = body;
 
         const thisTime = Date.now();
-
         if(!debate) return res.status(404).json({ message: "Debate not found" });
 
         const userRegistered = await User.findById(user);
@@ -97,10 +93,9 @@ const createVote = async (userId, debateId, body, res) => {
 
         if(vote[2] !== debate._id.toString()) return res.status(400).json({ message: "Invalid vote" });
 
-
         if(debate.isClosed) return res.status(400).json({ message: "Debate is closed" });
-        if (thisTime < debate.startDateVote) return res.status(400).json({ message: "Voting has not started yet" });
-        if (thisTime > debate.endDateVote) return res.status(400).json({ message: "Voting has ended" });
+        if (thisTime < new Date(debate.startDateVote)) return res.status(400).json({ message: "Voting has not started yet" });
+        if (thisTime > new Date(debate.endDateVote)) return res.status(400).json({ message: "Voting has ended" });
 
         const cleanVote = vote[1]
 
@@ -114,8 +109,7 @@ const createVote = async (userId, debateId, body, res) => {
             debate: debate._id
         });
         await newVote.save();
-
-        return newVote;
+        return res.status(201).json(newVote);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal Error: "+error });

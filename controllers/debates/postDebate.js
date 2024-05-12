@@ -9,7 +9,11 @@ const postDebate = async function (req, res){
         const isClosed = req.body.isClosed.toString();
         const parliament = req.body.parliament.toString();
         let type = req.body.type.toString();
-        const votingDescription = req.body.votingDescription.toString();
+
+        let votingDescription = "No description provided";
+        if(req.body.votingDescription) {
+            votingDescription = req.body.votingDescription.toString();
+        }
 
         const parliamentExists = await checkParliamentExists(parliament);
         if (!parliamentExists) {
@@ -17,7 +21,7 @@ const postDebate = async function (req, res){
         }
 
         if(type != "online" && type != "presential"){
-            type = "online";
+            type = "presential";
         }
 
         let newDebate;
