@@ -6,8 +6,8 @@ const updateDebateDetails = (debate, details) => {
     if ('description' in details) debate.description = details.description;
     if ('date' in details) debate.date = details.date;
     if ('isClosed' in details) debate.isClosed = details.isClosed;
-    if ('startDateVote' in details) debate.startDateVote = details.startDateVote;
-    if ('endDateVote' in details) debate.endDateVote = details.endDateVote;
+    if ('startDateVote' in details && !isNaN(Date.parse(details.startDateVote))) debate.startDateVote = details.startDateVote;
+    if ('endDateVote' in details && !isNaN(Date.parse(details.endDateVote))) debate.endDateVote = details.endDateVote;
     if('type' in details) debate.type = details.type;
     if('votingDescription' in details) debate.votingDescription = details.votingDescription;
 };
