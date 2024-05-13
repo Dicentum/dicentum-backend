@@ -8,6 +8,7 @@ const {validateVote} = require("../middlewares/debate/validateVote");
 const {validateOnlyOneVote} = require("../middlewares/debate/validateOnlyOneVote");
 const {validateVotingTime} = require("../middlewares/debate/validateVotingTime");
 const {decryptVote} = require("../middlewares/debate/decryptVote");
+const {getMessagesOfDebate, postMessage} = require("../controllers/messages");
 const router = express.Router();
 
 
@@ -68,6 +69,18 @@ router.delete('/:id',
     validId,
     authenticate,
     deleteDebate
+);
+
+router.get('/:id/messages',
+    validId,
+    authenticate,
+    getMessagesOfDebate
+);
+
+router.post('/:id/message',
+    validId,
+    authenticate,
+    postMessage
 );
 
 module.exports = router;

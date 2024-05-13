@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const UserVotesSchema = new mongoose.Schema({
+const UserMessageSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
@@ -9,13 +9,13 @@ const UserVotesSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Debate'
     },
-    vote: {
+    content: {
         type: String,
         required: true
     },
-}, { timestamps: true }
+},{ timestamps: true }
 );
 
-const UserVotes = mongoose.model('userVotes', UserVotesSchema);
+const UserMessage = mongoose.model('userMessage', UserMessageSchema);
 
-module.exports = UserVotes;
+module.exports = UserMessage;
