@@ -20,6 +20,10 @@ const createTimer = async function (req, res){
             return res.status(400).json({ message: "User does not exist" });
         }
 
+        if(debateExists.type == "online"){
+            return res.status(400).json({ message: "This debate type does not allows timers" });
+        }
+
         if(end < start){
             return res.status(400).json({ message: "End date must be greater than start date" });
         }
