@@ -5,9 +5,8 @@ const cors = require('cors');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const mongoose = require('mongoose');
-const config = require('./utils/config');
-const printer = require('./utils/printer');
+const connectDB = require('./middlewares/database/connection');
+const limiter = require('./middlewares/utils/index');
 
 const {MODE, ORIGIN} = require("./utils/config");
 const {setupRoutes} = require("./routes/main");
@@ -22,13 +21,13 @@ app.disable('x-powered-by');
 setupSession(app);
 
 //Mongoose connection
-mongoose.connect(config.MONGODB_URI, {})
-    .then(() => {
-      printer.info('Connection to MongoDB completed!');
-    })
-    .catch((err) => {
-      printer.error('Connection error to MongoDB Atlas:', err);
-    });
+if (MODE !== 'test'){
+    connectDB();
+}
+
+//Rate limiter
+app.use(limiter.limiter);
+app.set('trust proxy', 1);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

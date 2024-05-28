@@ -8,9 +8,12 @@ const {checkCast} = require("../middlewares/utils");
 
 const multer = require('multer');
 const upload = require('../utils/multer');
+const {checkUserRole} = require("../middlewares/user/checkUserRole");
 
 /* GET users listing. */
 router.get('/',
+    authenticate,
+    checkUserRole('admin'),
     getUsers
 );
 
@@ -18,7 +21,6 @@ router.get('/',
 router.get('/:id',
     checkCast,
     authenticate,
-//    checkUserOwnership,
     getUser
 );
 

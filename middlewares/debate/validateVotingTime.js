@@ -5,7 +5,7 @@ const validateVotingTime = async (req, res, next) => {
             const startDateVote = req.body.startDateVote.toString();
             const endDateVote = req.body.endDateVote.toString();
             if(startDateVote < date){
-                return res.status(400).json({ message: "Voting start date must be less than or equal to the starting date of the debate" });
+                return res.status(400).json({ message: "Voting start date must not be earlier than the starting date of the debate" });
             }
             if(endDateVote < startDateVote){
                 return res.status(400).json({ message: "Voting end date vote must be greater than start date vote" });

@@ -62,12 +62,14 @@ router.get('/:id/tally',
 router.put('/:id',
     validId,
     authenticate,
+    checkUserRole("admin"),
     editDebate
 );
 
 router.delete('/:id',
     validId,
     authenticate,
+    checkUserRole("admin"),
     deleteDebate
 );
 

@@ -49,7 +49,7 @@ const registerKeyFinish = async (req, res) => {
     } catch (error) {
         console.log('Error verifying registration response');
         console.error(error);
-        return res.status(400).json({error: error.message});
+        return res.status(500).json({error: error.message});
     }
 
     const {verified, registrationInfo} = verification;

@@ -14,10 +14,10 @@ const createTimer = async function (req, res){
         const userExists = await checkUserExists(user);
 
         if (!debateExists) {
-            return res.status(400).json({ message: "Debate does not exist" });
+            return res.status(404).json({ message: "Debate does not exist" });
         }
         if(!userExists){
-            return res.status(400).json({ message: "User does not exist" });
+            return res.status(404).json({ message: "User does not exist" });
         }
 
         if(debateExists.type == "online"){
