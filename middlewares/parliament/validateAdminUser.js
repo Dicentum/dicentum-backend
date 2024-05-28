@@ -6,7 +6,7 @@ const validateAdminUser = async (req, res, next) => {
         if (admin !== undefined && admin !== null && admin !== "") {
             const adminUser = await User.findById(admin.toString());
             if (!adminUser || adminUser.role !== 'admin') {
-                return res.status(400).json({message: "Admin user privileges not found or not an admin"});
+                return res.status(403).json({message: "Admin user privileges not found or not an admin"});
             }
         }
     } catch (error) {

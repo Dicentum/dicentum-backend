@@ -24,8 +24,6 @@ const postParliamentaryGroup = async function (req, res){
             let newGroup;
 
             if (req.file) {
-                console.log("TEHRE IS A FILE");
-                console.log(req.file);
                 if(req.file.mimetype == 'image/jpg' || req.file.mimetype == 'image/png' || req.file.mimetype == 'image/jpeg') {
                     const image = new Image({
                         filename: req.file.filename,

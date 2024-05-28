@@ -21,6 +21,17 @@ const editDebate = async function (req, res) {
         }
 
         updateDebateDetails(debate, req.body);
+
+        if(Date.parse(debate.endDateVote) < Date.parse(debate.startDateVote)){
+            return res.status(400).json({ message: "End date vote must be greater than start date vote" });
+        }
+        if (Date.parse(debate.startDateVote) < Date.now() || Date.parse(debate.endDateVote) < Date.now()) {
+            return res.status(400).json({ message: "Vote dates must be in the future" });
+        }
+        if(Date.parse(debate.date) > Date.parse(debate.startDateVote)){
+            return res.status(400).json({ message: "Debate date must be before start date vote" });
+        }
+
         await debate.save();
         res.status(200).json(debate);
     } catch (error) {

@@ -43,8 +43,6 @@ const editParliamentaryGroup = async function (req, res) {
         const oldUsers = [...group.users];
         const oldRequestedUsers = [...group.requestedUsers];
 
-        console.log(req.body);
-        console.log(req.file);
         await updateParliamentaryGroupDetails(group, req.body, req.file);
 
         const parliament = await Parliament.findById(group.parliament);

@@ -36,11 +36,21 @@ const postDebate = async function (req, res){
                 votingDescription
             });
         } else {
+            if(!req.body.startDateVote || !req.body.endDateVote){
+                return res.status(400).json({ message: "Start date vote and end date vote are required" });
+            }
+
             const startDateVote = req.body.startDateVote.toString();
             const endDateVote = req.body.endDateVote.toString();
 
-            if(endDateVote < startDateVote){
+            if(Date.parse(endDateVote) < Date.parse(startDateVote)){
                 return res.status(400).json({ message: "End date vote must be greater than start date vote" });
+            }
+            if (Date.parse(startDateVote) < Date.now() || Date.parse(endDateVote) < Date.now()) {
+                return res.status(400).json({ message: "Vote dates must be in the future" });
+            }
+            if(Date.parse(date) > Date.parse(startDateVote)){
+                return res.status(400).json({ message: "Debate date must be before start date vote" });
             }
 
             newDebate = new Debate({

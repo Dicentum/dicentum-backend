@@ -1,0 +1,55 @@
+config:
+  target: "http://localhost:3000"
+  phases:
+    - duration: 60
+      arrivalRate: 5
+      name: "Warm up"
+    - duration: 60
+      arrivalRate: 10
+      name: "Ramp up"
+    - duration: 60
+      arrivalRate: 20
+      name: "Peak load"
+    - duration: 60
+      arrivalRate: 100
+      name: "Extreme load"
+    - duration: 60
+      arrivalRate: 200
+      name: "Spike load"
+  variables:
+    username: "pepmor"
+    password: "Perianez1423"
+scenarios:
+  - name: "User login and fetch users"
+    flow:
+      - post:
+          url: "/auth/login"
+          json:
+            username: "{{ username }}"
+            password: "{{ password }}"
+          capture:
+            json: "$.token"
+            as: "token"
+      - get:
+          url: "/users"
+          headers:
+            Authorization: "{{ token }}"
+          expect:
+            - statusCode: 200
+  - name: "User registration"
+    flow:
+      - post:
+          url: "/auth/register"
+          json:
+            name: "testuser"
+            surname: "testsurname"
+            email: "test@gmail.com"
+            password: "SecurePass123"
+          expect:
+            - statusCode: 201
+  - name: "Fetch debates"
+    flow:
+      - get:
+          url: "/debates"
+          expect:
+            - statusCode: 200
